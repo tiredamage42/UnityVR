@@ -151,9 +151,7 @@ namespace Valve.VR.InteractionSystem
         }
 
 
-        //-------------------------------------------------
         // The Interactable object this Hand is currently hovering over
-        //-------------------------------------------------
         public Interactable hoveringInteractable
         {
             get { return _hoveringInteractable; }
@@ -193,9 +191,7 @@ namespace Valve.VR.InteractionSystem
         }
 
 
-        //-------------------------------------------------
         // Active GameObject attached to this Hand
-        //-------------------------------------------------
         public GameObject currentAttachedObject
         {
             get
@@ -623,7 +619,7 @@ namespace Valve.VR.InteractionSystem
             if (isActive)
             {
                 if (timeOffset == 0)
-                    return Player.instance.trackingOriginTransform.TransformVector(trackedObject.GetVelocity());
+                    return Player.instance.transform.TransformVector(trackedObject.GetVelocity());
                 else
                 {
                     Vector3 velocity;
@@ -631,7 +627,7 @@ namespace Valve.VR.InteractionSystem
 
                     bool success = trackedObject.GetVelocitiesAtTimeOffset(timeOffset, out velocity, out angularVelocity);
                     if (success)
-                        return Player.instance.trackingOriginTransform.TransformVector(velocity);
+                        return Player.instance.transform.TransformVector(velocity);
                 }
             }
 
@@ -647,7 +643,7 @@ namespace Valve.VR.InteractionSystem
             if (isActive)
             {
                 if (timeOffset == 0)
-                    return Player.instance.trackingOriginTransform.TransformDirection(trackedObject.GetAngularVelocity());
+                    return Player.instance.transform.TransformDirection(trackedObject.GetAngularVelocity());
                 else
                 {
                     Vector3 velocity;
@@ -655,7 +651,7 @@ namespace Valve.VR.InteractionSystem
 
                     bool success = trackedObject.GetVelocitiesAtTimeOffset(timeOffset, out velocity, out angularVelocity);
                     if (success)
-                        return Player.instance.trackingOriginTransform.TransformDirection(angularVelocity);
+                        return Player.instance.transform.TransformDirection(angularVelocity);
                 }
             }
 
@@ -665,8 +661,8 @@ namespace Valve.VR.InteractionSystem
         public void GetEstimatedPeakVelocities(out Vector3 velocity, out Vector3 angularVelocity)
         {
             trackedObject.GetEstimatedPeakVelocities(out velocity, out angularVelocity);
-            velocity = Player.instance.trackingOriginTransform.TransformVector(velocity);
-            angularVelocity = Player.instance.trackingOriginTransform.TransformDirection(angularVelocity);
+            velocity = Player.instance.transform.TransformVector(velocity);
+            angularVelocity = Player.instance.transform.TransformDirection(angularVelocity);
         }
 
 
@@ -1148,12 +1144,8 @@ namespace Valve.VR.InteractionSystem
             }
         }
 
-
-        //-------------------------------------------------
         // Continue to hover over this object indefinitely, whether or not the Hand moves out of its interaction trigger volume.
-        //
         // interactable - The Interactable to hover over indefinitely.
-        //-------------------------------------------------
         public void HoverLock(Interactable interactable)
         {
             if (spewDebugText)
@@ -1163,11 +1155,8 @@ namespace Valve.VR.InteractionSystem
         }
 
 
-        //-------------------------------------------------
         // Stop hovering over this object indefinitely.
-        //
         // interactable - The hover-locked Interactable to stop hovering over indefinitely.
-        //-------------------------------------------------
         public void HoverUnlock(Interactable interactable)
         {
             if (spewDebugText)
@@ -1272,21 +1261,18 @@ namespace Valve.VR.InteractionSystem
                     return false;
             }
         }
-
-        public bool IsGrabbingWithOppositeType(GrabTypes type)
-        {
-            switch (type)
-            {
+        public bool IsGrabbingWithOppositeType(GrabTypes type){
+            switch (type){
                 case GrabTypes.Pinch:
                     return grabGripAction.GetState(handType);
-
                 case GrabTypes.Grip:
                     return grabPinchAction.GetState(handType);
-
                 default:
                     return false;
             }
         }
+
+  
 
         public GrabTypes GetBestGrabbingType()
         {
@@ -1375,10 +1361,12 @@ namespace Valve.VR.InteractionSystem
             renderModels.Add(hoverRenderModel);
         }
 
+        
         public int GetDeviceIndex()
         {
             return trackedObject.GetDeviceIndex();
         }
+ 
     }
 
 
@@ -1387,40 +1375,20 @@ namespace Valve.VR.InteractionSystem
 
 
 #if UNITY_EDITOR
-    //-------------------------------------------------------------------------
     [UnityEditor.CustomEditor(typeof(Hand))]
-    public class HandEditor : UnityEditor.Editor
-    {
-        //-------------------------------------------------
-        // Custom Inspector GUI allows us to click from within the UI
-        //-------------------------------------------------
-        public override void OnInspectorGUI()
-        {
+    public class HandEditor : UnityEditor.Editor {
+        public override void OnInspectorGUI() {
             DrawDefaultInspector();
-
             Hand hand = (Hand)target;
-
-            if (hand.otherHand)
-            {
+            if (hand.otherHand){
                 if (hand.otherHand.otherHand != hand)
-                {
                     UnityEditor.EditorGUILayout.HelpBox("The otherHand of this Hand's otherHand is not this Hand.", UnityEditor.MessageType.Warning);
-                }
-
                 if (hand.handType == SteamVR_Input_Sources.LeftHand && hand.otherHand.handType != SteamVR_Input_Sources.RightHand)
-                {
                     UnityEditor.EditorGUILayout.HelpBox("This is a left Hand but otherHand is not a right Hand.", UnityEditor.MessageType.Warning);
-                }
-
                 if (hand.handType == SteamVR_Input_Sources.RightHand && hand.otherHand.handType != SteamVR_Input_Sources.LeftHand)
-                {
                     UnityEditor.EditorGUILayout.HelpBox("This is a right Hand but otherHand is not a left Hand.", UnityEditor.MessageType.Warning);
-                }
-
                 if (hand.handType == SteamVR_Input_Sources.Any && hand.otherHand.handType != SteamVR_Input_Sources.Any)
-                {
                     UnityEditor.EditorGUILayout.HelpBox("This is an any-handed Hand but otherHand is not an any-handed Hand.", UnityEditor.MessageType.Warning);
-                }
             }
         }
     }

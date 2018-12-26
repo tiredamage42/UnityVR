@@ -1,15 +1,10 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: The arrow for the longbow
-//
-//=============================================================================
+﻿// Purpose: The arrow for the longbow
 
 using UnityEngine;
 using System.Collections;
 
 namespace Valve.VR.InteractionSystem
 {
-	//-------------------------------------------------------------------------
 	public class Arrow : MonoBehaviour
 	{
 		public ParticleSystem glintParticle;

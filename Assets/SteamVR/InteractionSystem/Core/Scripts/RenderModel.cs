@@ -1,4 +1,5 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+﻿
+//HAND MODEL
 
 using UnityEngine;
 using System.Collections;
@@ -18,7 +19,7 @@ namespace Valve.VR.InteractionSystem
         protected string animatorParameterStateName = "AnimationState";
         protected int handAnimatorStateId = -1;
 
-        [Space]
+        //[Space]
 
         public GameObject controllerPrefab;
         protected GameObject controllerInstance;

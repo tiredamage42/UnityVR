@@ -315,7 +315,7 @@ namespace Valve.VR.InteractionSystem
 			Vector3 pointerDir = pointerStartTransform.forward;
 			bool hitSomething = false;
 			bool showPlayAreaPreview = false;
-			Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
+			Vector3 playerFeetOffset = player.transform.position - player.feetPositionGuess;
 
 			Vector3 arcVelocity = pointerDir * arcDistance;
 
@@ -695,7 +695,7 @@ namespace Valve.VR.InteractionSystem
 					}
 				}
 
-				startingFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
+				startingFeetOffset = player.transform.position - player.feetPositionGuess;
 				movedFeetFarEnough = false;
 
 				if ( onDeactivateObjectTransform.gameObject.activeSelf )
@@ -890,8 +890,8 @@ namespace Valve.VR.InteractionSystem
 
 			if ( teleportingToMarker.ShouldMovePlayer() )
 			{
-				Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
-				player.trackingOriginTransform.position = teleportPosition + playerFeetOffset;
+				Vector3 playerFeetOffset = player.transform.position - player.feetPositionGuess;
+				player.transform.position = teleportPosition + playerFeetOffset;
 			}
 			else
 			{

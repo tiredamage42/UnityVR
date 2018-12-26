@@ -1,8 +1,4 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Single location that the player can teleport to
-//
-//=============================================================================
+﻿// Purpose: Single location that the player can teleport to
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,13 +6,9 @@ using UnityEngine.UI;
 using UnityEditor;
 #endif
 
-namespace Valve.VR.InteractionSystem
-{
-	//-------------------------------------------------------------------------
-	public class TeleportPoint : TeleportMarkerBase
-	{
-		public enum TeleportPointType
-		{
+namespace Valve.VR.InteractionSystem{
+	public class TeleportPoint : TeleportMarkerBase{
+		public enum TeleportPointType{
 			MoveToLocation,
 			SwitchToNewScene
 		};
@@ -30,7 +22,6 @@ namespace Valve.VR.InteractionSystem
 		public Color titleLockedColor;
 		public bool playerSpawnPoint = false;
 
-		//Private data
 		private bool gotReleventComponents = false;
 		private MeshRenderer markerMesh;
 		private MeshRenderer switchSceneIcon;
@@ -53,13 +44,9 @@ namespace Valve.VR.InteractionSystem
 		private const string lockedAnimation = "locked_idle";
 
 
-		//-------------------------------------------------
 		public override bool showReticle
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 
@@ -257,18 +244,14 @@ namespace Valve.VR.InteractionSystem
 		}
 
 
-		//-------------------------------------------------
-		public void UpdateVisualsInEditor()
-		{
+		public void UpdateVisualsInEditor() {
 			if ( Application.isPlaying )
-			{
 				return;
-			}
-
+			
 			GetRelevantComponents();
 
-			if ( locked )
-			{
+			if ( locked ) {
+				
 				lockedIcon.gameObject.SetActive( true );
 				moveLocationIcon.gameObject.SetActive( false );
 				switchSceneIcon.gameObject.SetActive( false );
@@ -304,40 +287,26 @@ namespace Valve.VR.InteractionSystem
 						break;
 				}
 			}
-
 			titleText.text = title;
-
 			ReleaseRelevantComponents();
 		}
 	}
 
 
 #if UNITY_EDITOR
-	//-------------------------------------------------------------------------
 	[CustomEditor( typeof( TeleportPoint ) )]
-	public class TeleportPointEditor : Editor
-	{
-		//-------------------------------------------------
-		void OnEnable()
-		{
-			if ( Selection.activeTransform )
-			{
+	public class TeleportPointEditor : Editor{
+		void OnEnable(){
+			if ( Selection.activeTransform ){
 				TeleportPoint teleportPoint = Selection.activeTransform.GetComponent<TeleportPoint>();
 				teleportPoint.UpdateVisualsInEditor();
 			}
 		}
-
-
-		//-------------------------------------------------
-		public override void OnInspectorGUI()
-		{
+		public override void OnInspectorGUI(){
 			DrawDefaultInspector();
-
-			if ( Selection.activeTransform )
-			{
+			if ( Selection.activeTransform ){
 				TeleportPoint teleportPoint = Selection.activeTransform.GetComponent<TeleportPoint>();
-				if ( GUI.changed )
-				{
+				if ( GUI.changed ){
 					teleportPoint.UpdateVisualsInEditor();
 				}
 			}
