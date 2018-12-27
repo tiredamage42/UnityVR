@@ -1,16 +1,9 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Displays the arc lines for teleporting and does the traces
-//
-//=============================================================================
-
+﻿// Purpose: Displays the arc lines for teleporting and does the traces
 using UnityEngine;
+namespace Valve.VR.InteractionSystem{
 
-namespace Valve.VR.InteractionSystem
-{
-    //-------------------------------------------------------------------------
-    public class TeleportArc : MonoBehaviour
-    {
+    public class TeleportArc : MonoBehaviour {
+
         public int segmentCount = 60;
         public float thickness = 0.01f;
 
@@ -25,10 +18,6 @@ namespace Valve.VR.InteractionSystem
 
         public Material material;
 
-        [HideInInspector]
-        public int traceLayerMask = 0;
-
-        //Private data
         private LineRenderer[] lineRenderers;
         private float arcTimeOffset = 0.0f;
         private float prevThickness = 0.0f;
@@ -39,37 +28,24 @@ namespace Valve.VR.InteractionSystem
         private bool useGravity = true;
         private Transform arcObjectsTransfrom;
         private bool arcInvalid = false;
-        private float scale = 1;
-
-
-        //-------------------------------------------------
-        void Start()
-        {
+        
+        void Start() {
             arcTimeOffset = Time.time;
         }
 
-
-        //-------------------------------------------------
-        void Update()
-        {
+        void Update() {
             //scale arc to match player scale
-            scale = Player.instance.transform.lossyScale.x;
-            if (thickness != prevThickness || segmentCount != prevSegmentCount)
-            {
+            //scale = Player.instance.transform.lossyScale.x;
+            if (thickness != prevThickness || segmentCount != prevSegmentCount) {
                 CreateLineRendererObjects();
                 prevThickness = thickness;
                 prevSegmentCount = segmentCount;
             }
         }
 
-
-
-        //-------------------------------------------------
-        private void CreateLineRendererObjects()
-        {
+        void CreateLineRendererObjects() {
             //Destroy any existing line renderer objects
-            if (arcObjectsTransfrom != null)
-            {
+            if (arcObjectsTransfrom != null) {
                 Destroy(arcObjectsTransfrom.gameObject);
             }
 
@@ -91,12 +67,11 @@ namespace Valve.VR.InteractionSystem
                 lineRenderers[i].lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
                 lineRenderers[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 lineRenderers[i].material = material;
-#if (UNITY_5_4)
-                lineRenderers[i].SetWidth(thickness, thickness);
-#else
+
+                float scale = Player.instance.transform.lossyScale.x;
+
 				lineRenderers[i].startWidth = thickness * scale;
 				lineRenderers[i].endWidth = thickness * scale;
-#endif
                 lineRenderers[i].enabled = false;
             }
         }
@@ -140,10 +115,8 @@ namespace Valve.VR.InteractionSystem
         }
 
 
-        //-------------------------------------------------
         // Draws each segment of the arc individually
-        //-------------------------------------------------
-        public bool DrawArc(out RaycastHit hitInfo)
+        public bool DrawArc(out RaycastHit hitInfo, int traceLayerMask)
         {
             float timeStep = arcDuration / segmentCount;
 
@@ -158,7 +131,7 @@ namespace Valve.VR.InteractionSystem
 
             float segmentStartTime = currentTimeOffset;
 
-            float arcHitTime = FindProjectileCollision(out hitInfo);
+            float arcHitTime = FindProjectileCollision(out hitInfo, traceLayerMask);
 
             if (arcInvalid)
             {
@@ -239,22 +212,14 @@ namespace Valve.VR.InteractionSystem
 
 
         //-------------------------------------------------
-        public void SetColor(Color color)
-        {
-            for (int i = 0; i < segmentCount; ++i)
-            {
-#if (UNITY_5_4)
-                lineRenderers[i].SetColors(color, color);
-#else
+        public void SetColor(Color color) {
+            for (int i = 0; i < segmentCount; ++i) {
 				lineRenderers[i].startColor = color;
 				lineRenderers[i].endColor = color;
-#endif
             }
         }
 
-
-        //-------------------------------------------------
-        private float FindProjectileCollision(out RaycastHit hitInfo)
+        float FindProjectileCollision(out RaycastHit hitInfo, int traceLayerMask)
         {
             float timeStep = arcDuration / segmentCount;
             float segmentStartTime = 0.0f;
@@ -285,27 +250,19 @@ namespace Valve.VR.InteractionSystem
             return float.MaxValue;
         }
 
-
-        //-------------------------------------------------
-        public Vector3 GetArcPositionAtTime(float time)
-        {
+        public Vector3 GetArcPositionAtTime(float time) {
             Vector3 gravity = useGravity ? Physics.gravity : Vector3.zero;
+
+            float scale = Player.instance.transform.lossyScale.x;
 
             Vector3 arcPos = startPos + ((projectileVelocity * time) + (0.5f * time * time) * gravity) * scale;
             return arcPos;
         }
-
-
-        //-------------------------------------------------
-        private void HideLineSegments(int startSegment, int endSegment)
-        {
-            if (lineRenderers != null)
-            {
-                for (int i = startSegment; i < endSegment; ++i)
-                {
-                    lineRenderers[i].enabled = false;
-                }
-            }
+        void HideLineSegments(int startSegment, int endSegment) {
+            if (lineRenderers == null)
+                return;
+            for (int i = startSegment; i < endSegment; ++i)
+                lineRenderers[i].enabled = false;
         }
     }
 }

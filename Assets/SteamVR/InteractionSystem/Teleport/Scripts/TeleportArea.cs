@@ -6,29 +6,28 @@ using UnityEditor;
 
 namespace Valve.VR.InteractionSystem{
 	public class TeleportArea : TeleportMarkerBase{
-		public Bounds meshBounds { get; private set; }
+		//public Bounds meshBounds { get; private set; }
 
-		//Private data
-		MeshRenderer areaMesh;
-		int tintColorId = 0;
-		Color visibleTintColor = Color.clear;
-		Color highlightedTintColor = Color.clear;
-		Color lockedTintColor = Color.clear;
-		bool highlighted = false;
+		//MeshRenderer areaMesh;
+		//int tintColorId = 0;
+		//Color visibleTintColor = Color.clear;
+		//Color highlightedTintColor = Color.clear;
+		//Color lockedTintColor = Color.clear;
+		//bool highlighted = false;
 
 		public void Awake()
 		{
-			areaMesh = GetComponent<MeshRenderer>();
-			tintColorId = Shader.PropertyToID( "_TintColor" );
+			//areaMesh = GetComponent<MeshRenderer>();
+			//tintColorId = Shader.PropertyToID( "_TintColor" );
 			CalculateBounds();
 		}
 
 
 		public void Start()
 		{
-			visibleTintColor = Teleport.instance.areaVisibleMaterial.GetColor( tintColorId );
-			highlightedTintColor = Teleport.instance.areaHighlightedMaterial.GetColor( tintColorId );
-			lockedTintColor = Teleport.instance.areaLockedMaterial.GetColor( tintColorId );
+			//visibleTintColor = Teleport.instance.areaVisibleMaterial.GetColor( tintColorId );
+			//highlightedTintColor = Teleport.instance.areaHighlightedMaterial.GetColor( tintColorId );
+			//lockedTintColor = Teleport.instance.areaLockedMaterial.GetColor( tintColorId );
 		}
 
 		public override bool ShouldActivate( Vector3 playerPosition ) {
@@ -40,23 +39,23 @@ namespace Valve.VR.InteractionSystem{
 
 		public override void Highlight( bool highlight ) {
 			if ( !locked ) {
-				highlighted = highlight;
-				areaMesh.material = highlight ? Teleport.instance.areaHighlightedMaterial : Teleport.instance.areaVisibleMaterial;
+				//highlighted = highlight;
+				//areaMesh.material = highlight ? Teleport.instance.areaHighlightedMaterial : Teleport.instance.areaVisibleMaterial;
 			}
 		}
 
 		public override void SetAlpha( float tintAlpha, float alphaPercent ) {
-			Color tintedColor = GetTintColor();
-			tintedColor.a *= alphaPercent;
-			areaMesh.material.SetColor( tintColorId, tintedColor );
+			//Color tintedColor = GetTintColor();
+			//tintedColor.a *= alphaPercent;
+			//areaMesh.material.SetColor( tintColorId, tintedColor );
 		}
 		public override void UpdateVisuals(){
-			areaMesh.material = locked ? Teleport.instance.areaLockedMaterial : Teleport.instance.areaVisibleMaterial;
+			//areaMesh.material = locked ? Teleport.instance.areaLockedMaterial : Teleport.instance.areaVisibleMaterial;
 		}
 
 		public void UpdateVisualsInEditor() {
-			areaMesh = GetComponent<MeshRenderer>();
-			areaMesh.sharedMaterial = locked ? Teleport.instance.areaLockedMaterial : Teleport.instance.areaVisibleMaterial;
+			//areaMesh = GetComponent<MeshRenderer>();
+			//areaMesh.sharedMaterial = locked ? Teleport.instance.areaLockedMaterial : Teleport.instance.areaVisibleMaterial;
 		}
 
 
@@ -67,13 +66,13 @@ namespace Valve.VR.InteractionSystem{
 			Mesh mesh = meshFilter.sharedMesh;
 			if ( mesh == null )
 				return false;
-			meshBounds = mesh.bounds;
+			//meshBounds = mesh.bounds;
 			return true;
 		}
 
-		Color GetTintColor(){
-			return locked ? lockedTintColor : (highlighted ? highlightedTintColor : visibleTintColor);
-		}
+		//Color GetTintColor(){
+		//	return locked ? lockedTintColor : (highlighted ? highlightedTintColor : visibleTintColor);
+		//}
 	}
 
 

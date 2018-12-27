@@ -54,15 +54,10 @@ Shader "Valve/VR/HighlightPlanar"
 		VertexOutput MainVS( VertexInput i )
 		{
 			VertexOutput o;
-#if UNITY_VERSION >= 540
 			o.vertex = UnityObjectToClipPos(i.vertex);
-#else
-			o.vertex = mul(UNITY_MATRIX_MVP, i.vertex);
-#endif
 			o.uv = TRANSFORM_TEX( i.uv, _MainTex );
 			o.pos = mul(unity_ObjectToWorld, i.vertex);
-			o.color = i.color;
-			
+			o.color = i.color;			
 			return o;
 		}
 		
