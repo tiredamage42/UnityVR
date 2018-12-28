@@ -11,10 +11,12 @@ Shader "Valve/VR/Highlight"
 	}
 
 	CGINCLUDE
+
+		//uncomment if not working on nico's comp
 		
-		#pragma target 5.0
-		#pragma only_renderers d3d11 vulkan glcore
-		#pragma exclude_renderers gles
+		//#pragma target 5.0
+		//#pragma only_renderers d3d11 vulkan glcore
+		//#pragma exclude_renderers gles
 
 		#include "UnityCG.cginc"
 

@@ -26,10 +26,11 @@ namespace Valve.VR
 {
     public class SteamVR_Fade : MonoBehaviour
     {
-        private Color currentColor = new Color(0, 0, 0, 0); // default starting color: black and fully transparent
-        private Color targetColor = new Color(0, 0, 0, 0);  // default target color: black and fully transparent
-        private Color deltaColor = new Color(0, 0, 0, 0);   // the delta-color is basically the "speed / second" at which the current color should change
-        private bool fadeOverlay = false;
+        Color currentColor = new Color(0, 0, 0, 0); 
+        Color targetColor = new Color(0, 0, 0, 0);  
+        // the delta-color is basically the "speed / second" at which the current color should change
+        Color deltaColor = new Color(0, 0, 0, 0);   
+        bool fadeOverlay = false;
 
         static public void Start(Color newColor, float duration, bool fadeOverlay = false)
         {
@@ -101,7 +102,6 @@ namespace Valve.VR
                 {
                     currentColor += deltaColor * Time.deltaTime;
                 }
-
                 if (fadeOverlay)
                 {
                     var overlay = SteamVR_Overlay.instance;
@@ -111,13 +111,10 @@ namespace Valve.VR
                     }
                 }
             }
-
-            if (currentColor.a > 0 && fadeMaterial)
-            {
+            if (currentColor.a > 0 && fadeMaterial) {
                 fadeMaterial.SetColor(fadeMaterialColorID, currentColor);
                 fadeMaterial.SetPass(0);
                 GL.Begin(GL.QUADS);
-
                 GL.Vertex3(-1, -1, 0);
                 GL.Vertex3(1, -1, 0);
                 GL.Vertex3(1, 1, 0);
