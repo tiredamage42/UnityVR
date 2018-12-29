@@ -4,7 +4,10 @@ using UnityEngine;
 [CreateAssetMenu()]
 public class LightSaberOptions : DevOptionsObj
 {
-
+    public override System.Type ParentType()
+    {
+        return typeof(LightSaberOptions);
+    }
    
     public float hard_swing_velocity_threshold = 1.0f;
     public float min_swing_velocity = .25f;

@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class DevOptionsObj : ScriptableObject
 {
-
+    public abstract System.Type ParentType();
 }

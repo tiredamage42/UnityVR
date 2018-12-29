@@ -32,7 +32,7 @@ namespace Valve.VR.InteractionSystem
                                                                 AttachmentFlags.TurnOnKinematic |
                                                               AttachmentFlags.SnapOnAttach;
 
-        public struct AttachedObject
+        [System.Serializable] public struct AttachedObject
         {
             public GameObject attachedObject;
             public Interactable interactable;

@@ -29,7 +29,9 @@ public class DevOptions : MonoBehaviour
         public void Rebuild (DevOptionsObj[] new_objs) {
             options.Clear();
             for (int i = 0; i < new_objs.Length; i++) {
-                options.Add(new_objs[i].GetType().DeclaringType, new_objs[i]);
+
+            
+                options.Add(new_objs[i].ParentType(), new_objs[i]);
             }
         } 
 
@@ -73,6 +75,10 @@ obj.GetType().BaseType.Name
 
     public DevOptionsObj[] all_options;
 
+    private void Awake()
+    {
+        Rebuild();
+    }
 
 
 

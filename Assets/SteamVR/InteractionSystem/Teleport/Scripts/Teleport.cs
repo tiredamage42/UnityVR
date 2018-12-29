@@ -106,10 +106,10 @@ namespace Valve.VR.InteractionSystem
 		void Start()
 		{
 			teleportMarkers = GameObject.FindObjectsOfType<TeleportMarkerBase>();
+			player = InteractionSystem.Player.instance;
 
 			HidePointer();
 
-			player = InteractionSystem.Player.instance;
 			if ( player == null ) {
 				Debug.LogError( "Teleport: No Player instance found in map." );
 				Destroy( this.gameObject );
@@ -140,9 +140,18 @@ namespace Valve.VR.InteractionSystem
 					if (!teleporting ){
 						if (potential_teleport_valid)
 						{
-							//Pointing at an unlocked teleport marker
-							StartCoroutine( TeleportPlayer (potential_teleport_point, false, current_teleport_marker.scene_teleport, current_teleport_marker.switchToScene));
-							CancelTeleportHint();
+                            if (current_teleport_marker)
+                            {
+							    //Pointing at an unlocked teleport marker
+							    StartCoroutine( TeleportPlayer (potential_teleport_point, false, current_teleport_marker.scene_teleport, current_teleport_marker.switchToScene));
+
+                            }
+                            else
+                            {
+                                StartCoroutine(TeleportPlayer(potential_teleport_point, false, false, ""));
+
+                            }
+                            CancelTeleportHint();
 						}
 					}
 					
@@ -231,11 +240,20 @@ namespace Valve.VR.InteractionSystem
 			}
 
 			visible = false;
+
+
 				if ( ShouldOverrideHoverLock() )
 				{
-					//Restore the original hovering interactable on the hand
-					player.rightHand.HoverLock( originalHoverLockState ? originalHoveringInteractable : null );
-					
+                //Restore the original hovering interactable on the hand
+                if (originalHoverLockState == true)
+                {
+                    player.rightHand.HoverLock(originalHoveringInteractable);
+                }
+                else
+                {
+                    player.rightHand.HoverUnlock(null);
+                }
+               	
 				}
 				pointerAudioSource.PlayClip(pointerStopSound);
 			teleportPointerObject.SetActive( false );

@@ -95,12 +95,14 @@ public class LightSaber : MonoBehaviour
         lr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
         lr.numCapVertices = 4;
         lr.sharedMaterial = material;
-        new_obj.SetActive(false);
     }
     void BuildLineRenderers () {
         BuildLineRend("Inner Glow", options.o.inner_glow);
         BuildLineRend("Outer Glow", options.o.outer_glow);
         line_rends = GetComponentsInChildren<LineRenderer>();
+        Debug.Log("linerends" + line_rends.Length);
+        line_rends[0].gameObject.SetActive(false);
+        line_rends[1].gameObject.SetActive(false);
 
         SetBladeColor(blade_color, inner_blade_color);
         SetRendererWidth(options.o.blade_size.x, options.o.inner_blade_mult);

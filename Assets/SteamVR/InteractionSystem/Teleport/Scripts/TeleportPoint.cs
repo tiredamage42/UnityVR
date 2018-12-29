@@ -45,13 +45,13 @@ namespace Valve.VR.InteractionSystem{
 			moveLocationIcon.gameObject.SetActive( false );
 			switchSceneIcon.gameObject.SetActive( false );
 			lockedIcon.gameObject.SetActive( false );
+			teleportation = Teleport.instance;
 			UpdateVisuals();
 		}
 
 		void Start()
 		{
 			player = Player.instance;
-			teleportation = Teleport.instance;
 		}
 		void Update()
 		{

@@ -48,8 +48,8 @@ namespace Valve.VR.InteractionSystem{
 		}
 		bool initialized_refs = false;
 		void InitializeReferences (){
-			if (initialized_refs)
-				return;
+			//if (initialized_refs)
+			//	return;
 			Hand[] hands = GetComponentsInChildren<Hand>();
 			for ( int j = 0; j < hands.Length; j++ ){
 				if ( hands[j].handType == SteamVR_Input_Sources.LeftHand) leftHand = hands[j];

@@ -74,7 +74,7 @@ namespace Valve.VR.InteractionSystem
         private int prevOverlappingColliders = 0;
 
         private const int ColliderArraySize = 16;
-        private Collider[] overlappingColliders;
+        public Collider[] overlappingColliders;
 
         private Player playerInstance;
 
@@ -110,7 +110,7 @@ namespace Valve.VR.InteractionSystem
             
         }
 
-        Interactable _hoveringInteractable;
+        public Interactable _hoveringInteractable;
         // The Interactable object this Hand is currently hovering over
         public Interactable hoveringInteractable
         {
@@ -222,13 +222,22 @@ namespace Valve.VR.InteractionSystem
         protected virtual void UpdateHovering()
         {
             if (isActive == false)
+            {
+                Debug.Log("not active" + name);
                 return;
-            
+            }
+
             if (hoverLocked)
+            {
+                Debug.Log("hover locked" + name);
                 return;
+            }
 
             if (applicationLostFocusObject.activeSelf)
+            {
+                Debug.Log("lost focus" + name);
                 return;
+            }
 
             float closestDistance = float.MaxValue;
             Interactable closestInteractable = null;
