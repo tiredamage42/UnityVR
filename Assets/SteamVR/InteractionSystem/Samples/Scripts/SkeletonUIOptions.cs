@@ -9,8 +9,11 @@ namespace Valve.VR.InteractionSystem.Sample
     public class SkeletonUIOptions : MonoBehaviour
     {
 
+        
         public void AnimateHandWithController()
         {
+            /*
+            
             for (int handIndex = 0; handIndex < Player.instance.hands.Length; handIndex++)
             {
                 Hand hand = Player.instance.hands[handIndex];
@@ -19,10 +22,14 @@ namespace Valve.VR.InteractionSystem.Sample
                     hand.SetSkeletonRangeOfMotion(Valve.VR.EVRSkeletalMotionRange.WithController);
                 }
             }
+            */
+            
         }
 
         public void AnimateHandWithoutController()
         {
+            /*
+            
             for (int handIndex = 0; handIndex < Player.instance.hands.Length; handIndex++)
             {
                 Hand hand = Player.instance.hands[handIndex];
@@ -31,22 +38,31 @@ namespace Valve.VR.InteractionSystem.Sample
                     hand.SetSkeletonRangeOfMotion(Valve.VR.EVRSkeletalMotionRange.WithoutController);
                 }
             }
+            */
+            
         }
 
         public void ShowController()
         {
+            /*
+            
             for (int handIndex = 0; handIndex < Player.instance.hands.Length; handIndex++)
             {
                 Hand hand = Player.instance.hands[handIndex];
                 if (hand != null)
                 {
-                    hand.ShowController(true);
+                    hand.SetControllerVisibility(true, true); 
+                    
                 }
             }
+            */
+            
         }
 
         public void SetRenderModel(RenderModelHolder prefabs)
         {
+            /*
+            
             for (int handIndex = 0; handIndex < Player.instance.hands.Length; handIndex++)
             {
                 Hand hand = Player.instance.hands[handIndex];
@@ -58,18 +74,24 @@ namespace Valve.VR.InteractionSystem.Sample
                         hand.SetRenderModel(prefabs.leftPrefab);
                 }
             }
+            */
+            
         }
 
         public void HideController()
         {
+            /*
             for (int handIndex = 0; handIndex < Player.instance.hands.Length; handIndex++)
             {
                 Hand hand = Player.instance.hands[handIndex];
                 if (hand != null)
                 {
-                    hand.HideController(true);
+                    hand.SetControllerVisibility(false, true); 
+                    
                 }
             }
+            */
+            
         }
     }
 }

@@ -223,17 +223,17 @@ namespace Valve.VR.InteractionSystem
                 if (hand.isActive)
 				{
 					ItemPackage currentAttachedItemPackage = GetAttachedItemPackage( hand );
-                    if (currentAttachedItemPackage == itemPackage && hand.IsGrabEnding(currentAttachedItemPackage.gameObject))
-					{
-						TakeBackItem( hand );
-						return; // So that we don't pick up an ItemPackage the same frame that we return it
-					}
+                    //if (currentAttachedItemPackage == itemPackage && hand.IsGrabEnding(currentAttachedItemPackage.gameObject))
+					//{
+					//	TakeBackItem( hand );
+					//	return; // So that we don't pick up an ItemPackage the same frame that we return it
+					//}
 				}
 			}
 
 			if ( requireTriggerPressToTake )
 			{
-                GrabTypes startingGrab = hand.GetGrabStarting();
+                GrabTypes startingGrab = GrabTypes.None;//hand.GetGrabStarting();
 
 				if (startingGrab != GrabTypes.None)
 				{
@@ -258,15 +258,15 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private void RemoveMatchingItemsFromHandStack( ItemPackage package, Hand hand )
 		{
-			for ( int i = 0; i < hand.AttachedObjects.Count; i++ )
+			for ( int i = 0; i < hand.attachedObjects.Count; i++ )
 			{
-				ItemPackageReference packageReference = hand.AttachedObjects[i].attachedObject.GetComponent<ItemPackageReference>();
+				ItemPackageReference packageReference = hand.attachedObjects[i].attachedObject.GetComponent<ItemPackageReference>();
 				if ( packageReference != null )
 				{
 					ItemPackage attachedObjectItemPackage = packageReference.itemPackage;
 					if ( ( attachedObjectItemPackage != null ) && ( attachedObjectItemPackage == package ) )
 					{
-						GameObject detachedItem = hand.AttachedObjects[i].attachedObject;
+						GameObject detachedItem = hand.attachedObjects[i].attachedObject;
 						hand.DetachObject( detachedItem );
 					}
 				}
@@ -277,14 +277,14 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private void RemoveMatchingItemTypesFromHand( ItemPackage.ItemPackageType packageType, Hand hand )
 		{
-			for ( int i = 0; i < hand.AttachedObjects.Count; i++ )
+			for ( int i = 0; i < hand.attachedObjects.Count; i++ )
 			{
-				ItemPackageReference packageReference = hand.AttachedObjects[i].attachedObject.GetComponent<ItemPackageReference>();
+				ItemPackageReference packageReference = hand.attachedObjects[i].attachedObject.GetComponent<ItemPackageReference>();
 				if ( packageReference != null )
 				{
 					if ( packageReference.itemPackage.packageType == packageType )
 					{
-						GameObject detachedItem = hand.AttachedObjects[i].attachedObject;
+						GameObject detachedItem = hand.attachedObjects[i].attachedObject;
 						hand.DetachObject( detachedItem );
 					}
 				}
@@ -338,13 +338,13 @@ namespace Valve.VR.InteractionSystem
 
 			spawnedItem = GameObject.Instantiate( itemPackage.itemPrefab );
 			spawnedItem.SetActive( true );
-			hand.AttachObject( spawnedItem, grabType, attachmentFlags );
+			hand.AttachGameObject( spawnedItem, grabType, attachmentFlags );
 
 			if ( ( itemPackage.otherHandItemPrefab != null ) && ( hand.otherHand.isActive ) )
 			{
 				GameObject otherHandObjectToAttach = GameObject.Instantiate( itemPackage.otherHandItemPrefab );
 				otherHandObjectToAttach.SetActive( true );
-				hand.otherHand.AttachObject( otherHandObjectToAttach, grabType, attachmentFlags );
+				hand.otherHand.AttachGameObject( otherHandObjectToAttach, grabType, attachmentFlags );
 			}
 
 			itemIsSpawned = true;

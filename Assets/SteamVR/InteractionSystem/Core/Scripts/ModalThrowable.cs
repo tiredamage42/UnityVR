@@ -20,22 +20,31 @@ namespace Valve.VR.InteractionSystem
         
         protected override void HandHoverUpdate(Hand hand)
         {
-            GrabTypes startingGrabType = hand.GetGrabStarting();
+            bool grabbing = Player.instance.input_manager.GetGripDown(hand);
 
-            if (startingGrabType != GrabTypes.None)
+            //GrabTypes startingGrabType = hand.GetGrabStarting();
+
+
+            //if (startingGrabType != GrabTypes.None)
+            if (grabbing)
+            
             {
+                hand.AttachInteractable(interactable, GrabTypes.None, attachmentOffset);
+                /*
                 if (startingGrabType == GrabTypes.Pinch)
                 {
-                    hand.AttachObject(gameObject, startingGrabType, attachmentFlags, pinchOffset);
+                    hand.AttachInteractable(interactable, startingGrabType, pinchOffset);
                 }
                 else if (startingGrabType == GrabTypes.Grip)
                 {
-                    hand.AttachObject(gameObject, startingGrabType, attachmentFlags, gripOffset);
+                    hand.AttachInteractable(interactable, startingGrabType, gripOffset);
                 }
                 else
                 {
-                    hand.AttachObject(gameObject, startingGrabType, attachmentFlags, attachmentOffset);
+                    hand.AttachInteractable(interactable, startingGrabType, attachmentOffset);
                 }
+                */
+                
 
                 hand.HideGrabHint();
             }

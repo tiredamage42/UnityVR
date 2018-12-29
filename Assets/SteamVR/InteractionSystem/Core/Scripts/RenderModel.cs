@@ -9,6 +9,7 @@ namespace Valve.VR.InteractionSystem
 {
     public class RenderModel : MonoBehaviour
     {
+
         public GameObject handPrefab;
         protected GameObject handInstance;
         protected Renderer[] handRenderers;
@@ -16,7 +17,7 @@ namespace Valve.VR.InteractionSystem
         protected SteamVR_Behaviour_Skeleton handSkeleton;
         protected Animator handAnimator;
 
-        protected string animatorParameterStateName = "AnimationState";
+        protected const string animatorParameterStateName = "AnimationState";
         protected int handAnimatorStateId = -1;
 
         //[Space]
@@ -174,7 +175,7 @@ namespace Valve.VR.InteractionSystem
             return Quaternion.identity;
         }
 
-        private void OnRenderModelLoaded(SteamVR_RenderModel loadedRenderModel, bool success)
+        void OnRenderModelLoaded(SteamVR_RenderModel loadedRenderModel, bool success)
         {
             if (controllerRenderModel == loadedRenderModel)
             {
@@ -364,31 +365,35 @@ namespace Valve.VR.InteractionSystem
             }
         }
 
-        public void SetAnimationState(int stateValue)
+public enum AnimationState { Rest=0, SphereGrab=1, StickGrab=2, PinchGrab=3 }
+        
+        /*
+        rest, sphere, stick, pinch
+        */
+        public void SetAnimationState(AnimationState stateValue)
         {
             if (handSkeleton != null)
             {
+                //makes the skeleton fully animated to pose (no vr fingers on buttons)
                 if (handSkeleton.isBlending == false)
                     handSkeleton.BlendToAnimation();
 
                 if (CheckAnimatorInit())
-                    handAnimator.SetInteger(handAnimatorStateId, stateValue);
+                    handAnimator.SetInteger(handAnimatorStateId, (int)stateValue);
             }
         }
-
         public void StopAnimation()
         {
             if (handSkeleton != null)
             {
                 if (handSkeleton.isBlending == false)
                     handSkeleton.BlendToSkeleton();
-
                 if (CheckAnimatorInit())
                     handAnimator.SetInteger(handAnimatorStateId, 0);
             }
         }
 
-        private bool CheckAnimatorInit()
+        bool CheckAnimatorInit()
         {
             if (handAnimatorStateId == -1 && handAnimator != null)
             {

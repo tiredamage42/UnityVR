@@ -1,17 +1,11 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Displays 2d content on a large virtual screen.
-//
-//=============================================================================
+﻿// Purpose: Displays 2d content on a large virtual screen.
 
 using UnityEngine;
 using System.Collections;
 using Valve.VR;
 
-namespace Valve.VR
-{
-    public class SteamVR_Overlay : MonoBehaviour
-    {
+namespace Valve.VR {
+    public class SteamVR_Overlay : MonoBehaviour {
         public Texture texture;
         public bool curved = true;
         public bool antialias = true;
@@ -36,7 +30,7 @@ namespace Valve.VR
 
         static public string key { get { return "unity:" + Application.companyName + "." + Application.productName; } }
 
-        private ulong handle = OpenVR.k_ulOverlayHandleInvalid;
+        ulong handle = OpenVR.k_ulOverlayHandleInvalid;
 
         void OnEnable()
         {
@@ -91,7 +85,6 @@ namespace Valve.VR
                 tex.eType = SteamVR.instance.textureType;
                 tex.eColorSpace = EColorSpace.Auto;
                 overlay.SetOverlayTexture(handle, ref tex);
-
                 overlay.SetOverlayAlpha(handle, alpha);
                 overlay.SetOverlayWidthInMeters(handle, scale);
                 overlay.SetOverlayAutoCurveDistanceRangeInMeters(handle, curvedRange.x, curvedRange.y);
@@ -143,7 +136,7 @@ namespace Valve.VR
                 overlay.HideOverlay(handle);
             }
         }
-
+        /*
         public bool PollNextEvent(ref VREvent_t pEvent)
         {
             var overlay = OpenVR.Overlay;
@@ -162,7 +155,7 @@ namespace Valve.VR
             public float distance;
         }
 
-        public bool ComputeIntersection(Vector3 source, Vector3 direction, ref IntersectionResults results)
+        bool ComputeIntersection(Vector3 source, Vector3 direction, ref IntersectionResults results)
         {
             var overlay = OpenVR.Overlay;
             if (overlay == null)
@@ -187,5 +180,7 @@ namespace Valve.VR
             results.distance = output.fDistance;
             return true;
         }
+        */
+        
     }
 }

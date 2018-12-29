@@ -29,7 +29,7 @@ namespace Valve.VR.InteractionSystem
 
 		private bool allowArrowSpawn = true;
 		private bool nocked;
-        private GrabTypes nockedWithType = GrabTypes.None;
+        //private GrabTypes nockedWithType = GrabTypes.None;
 
 		private bool inNockRange = false;
 		private bool arrowLerpComplete = false;
@@ -105,7 +105,7 @@ namespace Valve.VR.InteractionSystem
 			}
 
 			float distanceToNockPosition = Vector3.Distance( transform.parent.position, bow.nockTransform.position );
-
+			bool grabbing = false;
 			// If there's an arrow spawned in the hand and it's not nocked yet
 			if ( !nocked )
 			{
@@ -170,10 +170,13 @@ namespace Valve.VR.InteractionSystem
 					}
 				}
 
-                GrabTypes bestGrab = hand.GetBestGrabbingType(GrabTypes.Pinch, true);
-
+                //GrabTypes bestGrab = hand.GetBestGrabbingType(GrabTypes.Pinch, true);
+				grabbing = Player.instance.input_manager.GetGrip(hand);
+				
                 // If arrow is close enough to the nock position and we're pressing the trigger, and we're not nocked yet, Nock
-                if ( ( distanceToNockPosition < nockDistance ) && bestGrab != GrabTypes.None && !nocked )
+				
+                //if ( ( distanceToNockPosition < nockDistance ) && bestGrab != GrabTypes.None && !nocked )
+				if ( ( distanceToNockPosition < nockDistance ) && grabbing && !nocked )
 				{
 					if ( currentArrow == null )
 					{
@@ -181,7 +184,7 @@ namespace Valve.VR.InteractionSystem
 					}
 
 					nocked = true;
-                    nockedWithType = bestGrab;
+                    //nockedWithType = bestGrab;
 					bow.StartNock( this );
 					hand.HoverLock( GetComponent<Interactable>() );
 					allowTeleport.teleportAllowed = false;
@@ -191,9 +194,12 @@ namespace Valve.VR.InteractionSystem
 				}
 			}
 
-
+			grabbing = Player.instance.input_manager.GetGrip(hand);
+				
 			// If arrow is nocked, and we release the trigger
-			if ( nocked && hand.IsGrabbingWithType(nockedWithType) == false )
+			//if ( nocked && hand.IsGrabbingWithType(nockedWithType) == false )
+			if ( nocked && !grabbing )
+			
 			{
 				if ( bow.pulled ) // If bow is pulled back far enough, fire arrow, otherwise reset arrow in arrowhand
 				{
@@ -205,7 +211,7 @@ namespace Valve.VR.InteractionSystem
 					currentArrow.transform.parent = arrowNockTransform;
 					Util.ResetTransform( currentArrow.transform );
 					nocked = false;
-                    nockedWithType = GrabTypes.None;
+                    //nockedWithType = GrabTypes.None;
 					bow.ReleaseNock();
 					hand.HoverUnlock( GetComponent<Interactable>() );
 					allowTeleport.teleportAllowed = true;
@@ -214,7 +220,6 @@ namespace Valve.VR.InteractionSystem
 				bow.StartRotationLerp(); // Arrow is releasing from the bow, tell the bow to lerp back to controller rotation
 			}
 		}
-
 
 		//-------------------------------------------------
 		private void OnDetachedFromHand( Hand hand )
@@ -241,7 +246,7 @@ namespace Valve.VR.InteractionSystem
 			arrow.arrowHeadRB.AddTorque( currentArrow.transform.forward * 10 );
 
 			nocked = false;
-            nockedWithType = GrabTypes.None;
+            //nockedWithType = GrabTypes.None;
 
 			currentArrow.GetComponent<Arrow>().ArrowReleased( bow.GetArrowVelocity() );
 			bow.ArrowReleased();

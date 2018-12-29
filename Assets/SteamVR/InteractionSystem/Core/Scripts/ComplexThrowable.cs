@@ -34,10 +34,12 @@ namespace Valve.VR.InteractionSystem
 
 		private List<Rigidbody> rigidBodies = new List<Rigidbody>();
 
+		Interactable interactable;
 		//-------------------------------------------------
 		void Awake()
 		{
 			GetComponentsInChildren<Rigidbody>( rigidBodies );
+			interactable = GetComponent<Interactable>();
 		}
 
 
@@ -46,7 +48,8 @@ namespace Valve.VR.InteractionSystem
 		{
 			for ( int i = 0; i < holdingHands.Count; i++ )
 			{
-                if (holdingHands[i].IsGrabEnding(this.gameObject))
+				if (Player.instance.input_manager.GetGripUp(holdingHands[i]))
+                //if (holdingHands[i].IsGrabEnding(this.gameObject))
                 {
 					PhysicsDetach( holdingHands[i] );
 				}
@@ -83,11 +86,13 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private void HandHoverUpdate( Hand hand )
 		{
-            GrabTypes startingGrabType = hand.GetGrabStarting();
+			bool starting_grab = Player.instance.input_manager.GetGripDown(hand);
 
-            if (startingGrabType != GrabTypes.None)
+            //GrabTypes startingGrabType = hand.GetGrabStarting();
+            //if (startingGrabType != GrabTypes.None)
+			if (starting_grab)
 			{
-				PhysicsAttach( hand, startingGrabType );
+				PhysicsAttach( hand, GrabTypes.None);//startingGrabType );
 			}
 		}
 
@@ -134,7 +139,7 @@ namespace Valve.VR.InteractionSystem
 			offset = Mathf.Min( offset.magnitude, 1.0f ) * offset.normalized;
 			holdingPoint = holdingBody.transform.InverseTransformPoint( holdingBody.worldCenterOfMass + offset );
 
-			hand.AttachObject( this.gameObject, startingGrabType, attachmentFlags );
+			hand.AttachInteractable( interactable, startingGrabType );
 
 			// Update holding list
 			holdingHands.Add( hand );

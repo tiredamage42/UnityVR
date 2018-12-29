@@ -14,6 +14,14 @@ namespace Valve.VR.InteractionSystem
 	//-------------------------------------------------------------------------
 	public class Interactable : MonoBehaviour
     {
+
+
+        [EnumFlags]
+		[Tooltip( "The flags used to attach this object to the hand." )]
+		public Hand.AttachmentFlags attachmentFlags = Hand.defaultAttachmentFlags;
+        public Vector3 attach_position_offset, attach_rotation_offset;
+        
+
         [Tooltip("Activates an action set on attach and deactivates on detach")]
         public SteamVR_ActionSet activateActionSetOnAttach;
 
@@ -28,6 +36,8 @@ namespace Valve.VR.InteractionSystem
 
         [Tooltip("The integer in the animator to trigger on pickup. 0 for none")]
         public int handAnimationOnPickup = 0;
+        public RenderModel.AnimationState handAnimationOnPickup1 = RenderModel.AnimationState.Rest;
+
 
         [Tooltip("The range of motion to set on the skeleton. None for no change.")]
         public SkeletalMotionRangeChange setRangeOfMotionOnPickup = SkeletalMotionRangeChange.None;
