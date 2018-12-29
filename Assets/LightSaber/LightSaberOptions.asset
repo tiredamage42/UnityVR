@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 451ac35e2e9a544d0a0eeb723dba03d0, type: 3}
+  m_Name: LightSaberOptions
+  m_EditorClassIdentifier: 
+  hard_swing_velocity_threshold: 10
+  min_swing_velocity: 5
+  blade_size: {x: 0.1, y: 1}
+  inner_blade_mult: 0.075
+  open_close_speed: {x: 1, y: 1}
+  blade_epsilon_threshold: 0.01
+  texture_offset_speed: 1
+  blade_layer_mask:
+    serializedVersion: 2
+    m_Bits: 1
+  stay_damage_frequency: 0.5
+  inner_glow: {fileID: 2100000, guid: a460807a1510a4c438452b3845ab83b0, type: 2}
+  outer_glow: {fileID: 2100000, guid: c1204188eb75f4033964ef2fb6e23e38, type: 2}
+  sparks_prefab: {fileID: 5157027655030818261, guid: f07ed6aeb71c54f4fb16fbcb648ded8b,
+    type: 3}
+  blade_enable_audio:
+    clips:
+    - {fileID: 8300000, guid: d37453fc651a24f7c9be47fab236c5b7, type: 3}
+    - {fileID: 8300000, guid: e34908c7d5e824519931f1b1c4faeae6, type: 3}
+    - {fileID: 8300000, guid: 5b73e7b4c33f9443e9160357842e843b, type: 3}
+    - {fileID: 8300000, guid: 1da7eed9cbd0f4a449cb005d6dcdfa1e, type: 3}
+    one_shot: 1
+  blade_disable_audio:
+    clips:
+    - {fileID: 8300000, guid: b6b0014e175b44b028b2fc5240815bce, type: 3}
+    - {fileID: 8300000, guid: 74273958503e84fe59839e9638685a62, type: 3}
+    one_shot: 1
+  blade_hit_audio:
+    clips:
+    - {fileID: 8300000, guid: ce07de56fec4149bcbdedd7cf3c9eb82, type: 3}
+    - {fileID: 8300000, guid: aafda0ca063c94507b2692c29ab1b391, type: 3}
+    - {fileID: 8300000, guid: 33fb15005d2254bb0966bfe6436933e5, type: 3}
+    - {fileID: 8300000, guid: 8088f49663a844aa7ac396bab654f9b6, type: 3}
+    - {fileID: 8300000, guid: 1485671dfa2f5460a86bf2a6d253e7c2, type: 3}
+    - {fileID: 8300000, guid: 2f52dff08ef1347cd9d9c19379ba7ca6, type: 3}
+    - {fileID: 8300000, guid: a5da1906a439d4bf2a507f287a6ddbd8, type: 3}
+    - {fileID: 8300000, guid: 940e7a0d3a5774b74a309f9d77a89eb6, type: 3}
+    - {fileID: 8300000, guid: 6ddf45471266743edb21ef6797e952c4, type: 3}
+    - {fileID: 8300000, guid: f85aef413c327496ba7db534f5263eb9, type: 3}
+    - {fileID: 8300000, guid: 16dade8238e294e01a6fe21d0f49827b, type: 3}
+    one_shot: 1
+  blade_idle_audio:
+    clips:
+    - {fileID: 8300000, guid: 10c3c283ab7974879b639cb102132a06, type: 3}
+    - {fileID: 8300000, guid: 38320760346064fd3b71dc188b1531e5, type: 3}
+    - {fileID: 8300000, guid: d9374cf05860148cd9f682798e4ba88a, type: 3}
+    - {fileID: 8300000, guid: 2bfcbd0d5c6e949599f0aa496822ba3e, type: 3}
+    one_shot: 0
+  blade_swing_audio_light:
+    clips:
+    - {fileID: 8300000, guid: d1aaeb0045e5e4f1bbdab45fd5dcc041, type: 3}
+    - {fileID: 8300000, guid: 7c84191f0a1e54cc29ae4dbade4b97c8, type: 3}
+    - {fileID: 8300000, guid: 64f17f382ccad47c9bf90dcf5104c62c, type: 3}
+    - {fileID: 8300000, guid: 54cc333a318e544ddad9765631a268e5, type: 3}
+    - {fileID: 8300000, guid: 3c3592c554f014427b339528f07c0706, type: 3}
+    - {fileID: 8300000, guid: b23528d1733b7432885abf4fa6573450, type: 3}
+    - {fileID: 8300000, guid: f82480a7975304dbeab9eaa7b47fe4f9, type: 3}
+    - {fileID: 8300000, guid: 963e3f3413cf84007a0996faf3809089, type: 3}
+    - {fileID: 8300000, guid: c4399e6dcc7ff4f1b8838d8d699066c9, type: 3}
+    one_shot: 1
+  blade_swing_audio_heavy:
+    clips:
+    - {fileID: 8300000, guid: 7e60c2d2e4199416eb066467e2d280bf, type: 3}
+    - {fileID: 8300000, guid: 4dc89bc1b2637411cbd423cb2d293b9e, type: 3}
+    - {fileID: 8300000, guid: 3f40821498441430a8c4283f9a83993d, type: 3}
+    - {fileID: 8300000, guid: 7af5d133121a140cb835eb7d6a887d88, type: 3}
+    - {fileID: 8300000, guid: 30058809d54444dbe8039c65ec5f2bb6, type: 3}
+    - {fileID: 8300000, guid: 13db876a06ad740e1b9678b729b33db1, type: 3}
+    - {fileID: 8300000, guid: 082a8471346464d66ad5096a2a7e218b, type: 3}
+    - {fileID: 8300000, guid: 8be50a12f8c544c1d85b5cf015cce087, type: 3}
+    - {fileID: 8300000, guid: b84108ac0c3e24858952881bdb09ac8b, type: 3}
+    one_shot: 1

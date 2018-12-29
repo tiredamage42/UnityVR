@@ -208,7 +208,7 @@ namespace Valve.VR.InteractionSystem
                 }
             }
 
-            bool grabbing_end = Player.instance.input_manager.GetGripDown(hand);
+            bool grabbing_end = Player.instance.input_manager.GetGripUp(hand);
 
 
             //if (hand.IsGrabEnding(this.gameObject))
