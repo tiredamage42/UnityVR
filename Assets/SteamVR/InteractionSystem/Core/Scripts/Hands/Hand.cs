@@ -51,8 +51,8 @@ namespace Valve.VR.InteractionSystem
         public SteamVR_Skeleton_JointIndexEnum fingerJointHover = SteamVR_Skeleton_JointIndexEnum.indexTip;
         public float fingerJointHoverRadius = 0.025f;
 
-        [Tooltip("A transform on the hand to center attached objects on")]
-        public Transform objectAttachmentPoint;
+        //[Tooltip("A transform on the hand to center attached objects on")]
+        //public Transform objectAttachmentPoint;
 
         
         public GameObject renderModelPrefab;
@@ -168,13 +168,14 @@ namespace Valve.VR.InteractionSystem
 
         protected virtual void Awake()
         {
+            InitializeHandHelper();
             inputFocusAction = SteamVR_Events.InputFocusAction(OnInputFocus);
 
             if (hoverSphereTransform == null)
                 hoverSphereTransform = this.transform;
 
-            if (objectAttachmentPoint == null)
-                objectAttachmentPoint = this.transform;
+            //if (objectAttachmentPoint == null)
+            //    objectAttachmentPoint = this.transform;
 
             applicationLostFocusObject = new GameObject("_application_lost_focus");
             applicationLostFocusObject.transform.parent = transform;
@@ -190,7 +191,7 @@ namespace Valve.VR.InteractionSystem
 
         protected virtual void OnTransformUpdated(SteamVR_Action_Pose pose)
         {
-            AttachmentsOnTransformUpdate();
+            //AttachmentsOnTransformUpdate();
         }
 
         protected virtual IEnumerator Start()
@@ -205,7 +206,7 @@ namespace Valve.VR.InteractionSystem
             // allocate array for colliders
             overlappingColliders = new Collider[ColliderArraySize];
 
-            Debug.Log( "Hand - initializing connection routine" );
+            //Debug.Log( "Hand - initializing connection routine" );
             while (true)
             {
                 if (isPoseValid)
@@ -223,7 +224,6 @@ namespace Valve.VR.InteractionSystem
         {
             if (isActive == false)
             {
-                Debug.Log("not active" + name);
                 return;
             }
 
@@ -449,7 +449,9 @@ namespace Valve.VR.InteractionSystem
             else
             {
                 applicationLostFocusObject.SetActive(true);
-                AttachGameObject(applicationLostFocusObject, GrabTypes.Scripted, AttachmentFlags.ParentToHand);
+                //AttachGameObject(applicationLostFocusObject, GrabTypes.Scripted, AttachmentFlags.ParentToHand);
+                AttachGameObject(applicationLostFocusObject, AttachmentFlags.ParentToHand);
+                
                 BroadcastMessage("OnParentHandInputFocusLost", SendMessageOptions.DontRequireReceiver);
             }
         }

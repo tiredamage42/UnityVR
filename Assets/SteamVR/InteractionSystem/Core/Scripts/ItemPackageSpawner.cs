@@ -338,13 +338,16 @@ namespace Valve.VR.InteractionSystem
 
 			spawnedItem = GameObject.Instantiate( itemPackage.itemPrefab );
 			spawnedItem.SetActive( true );
-			hand.AttachGameObject( spawnedItem, grabType, attachmentFlags );
+			//hand.AttachGameObject( spawnedItem, grabType, attachmentFlags );
+			hand.AttachGameObject( spawnedItem, attachmentFlags );
 
 			if ( ( itemPackage.otherHandItemPrefab != null ) && ( hand.otherHand.isActive ) )
 			{
 				GameObject otherHandObjectToAttach = GameObject.Instantiate( itemPackage.otherHandItemPrefab );
 				otherHandObjectToAttach.SetActive( true );
-				hand.otherHand.AttachGameObject( otherHandObjectToAttach, grabType, attachmentFlags );
+				//hand.otherHand.AttachGameObject( otherHandObjectToAttach, grabType, attachmentFlags );
+				hand.otherHand.AttachGameObject( otherHandObjectToAttach, attachmentFlags );
+			
 			}
 
 			itemIsSpawned = true;

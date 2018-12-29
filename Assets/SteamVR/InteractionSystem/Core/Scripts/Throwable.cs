@@ -11,12 +11,9 @@ namespace Valve.VR.InteractionSystem
     [RequireComponent( typeof(VelocityEstimator))]
 	public class Throwable : MonoBehaviour
 	{
-		[EnumFlags]
-		[Tooltip( "The flags used to attach this object to the hand." )]
-		public Hand.AttachmentFlags attachmentFlags = Hand.AttachmentFlags.ParentToHand | Hand.AttachmentFlags.DetachFromOtherHand | Hand.AttachmentFlags.TurnOnKinematic;
-
-        [Tooltip("The local point which acts as a positional and rotational offset to use while held")]
-        public Transform attachmentOffset;
+		//[EnumFlags]
+		//[Tooltip( "The flags used to attach this object to the hand." )]
+		//public Hand.AttachmentFlags attachmentFlags = Hand.AttachmentFlags.ParentToHand | Hand.AttachmentFlags.DetachFromOtherHand | Hand.AttachmentFlags.TurnOnKinematic;
 
 		[Tooltip( "How fast must this object be moving to attach due to a trigger hold instead of a trigger press? (-1 to disable)" )]
         public float catchingSpeedThreshold = -1;
@@ -31,21 +28,16 @@ namespace Valve.VR.InteractionSystem
 		[Tooltip( "When detaching the object, should it return to its original parent?" )]
 		public bool restoreOriginalParent = false;
 
-        public bool attachEaseIn = false;
-		public AnimationCurve snapAttachEaseInCurve = AnimationCurve.EaseInOut( 0.0f, 0.0f, 1.0f, 1.0f );
-		public float snapAttachEaseInTime = 0.15f;
-
+        
 		protected VelocityEstimator velocityEstimator;
         protected bool attached = false;
         protected float attachTime;
         protected Vector3 attachPosition;
         protected Quaternion attachRotation;
-        protected Transform attachEaseInTransform;
 
 		public UnityEvent onPickUp;
 		public UnityEvent onDetachFromHand;
 
-		public bool snapAttachEaseInCompleted = false;
         
         protected RigidbodyInterpolation hadInterpolation = RigidbodyInterpolation.None;
 
@@ -61,18 +53,9 @@ namespace Valve.VR.InteractionSystem
 			velocityEstimator = GetComponent<VelocityEstimator>();
             interactable = GetComponent<Interactable>();
 
-			if ( attachEaseIn )
-			{
-				attachmentFlags &= ~Hand.AttachmentFlags.SnapOnAttach;
-			}
-
+			
             rigidbody = GetComponent<Rigidbody>();
             rigidbody.maxAngularVelocity = 50.0f;
-
-            if(attachmentOffset != null)
-            {
-                interactable.handFollowTransform = attachmentOffset;
-            }
 
 		}
 
@@ -99,7 +82,7 @@ namespace Valve.VR.InteractionSystem
 				{
 					if (rigidbody.velocity.magnitude >= catchingThreshold)
 					{
-						hand.AttachInteractable( interactable, GrabTypes.None ); //bestGrabType );
+						hand.AttachInteractable( interactable);//, GrabTypes.None ); //bestGrabType );
 						showHint = false;
 					}
 				}
@@ -123,14 +106,9 @@ namespace Valve.VR.InteractionSystem
         protected virtual void HandHoverUpdate( Hand hand )
         {
             bool grabbing = Player.instance.input_manager.GetGripDown(hand);
-
-            //GrabTypes startingGrabType = hand.GetGrabStarting();
-            
-            //if (startingGrabType != GrabTypes.None)
             if (grabbing)
-            
             {
-				hand.AttachInteractable( interactable, GrabTypes.None, attachmentOffset ); //startingGrabType, attachmentOffset );
+				hand.AttachInteractable( interactable );
                 hand.HideGrabHint();
             }
 		}
@@ -148,15 +126,14 @@ namespace Valve.VR.InteractionSystem
 			hand.HoverLock( null );
             
             rigidbody.interpolation = RigidbodyInterpolation.None;
+
 		    velocityEstimator.BeginEstimatingVelocity();
-			attachTime = Time.time;
+			
+            attachTime = Time.time;
 			attachPosition = transform.position;
 			attachRotation = transform.rotation;
-			if ( attachEaseIn )
-			{
-                attachEaseInTransform = hand.objectAttachmentPoint;
-			}
-			snapAttachEaseInCompleted = false;
+			
+           
 		}
 
 
@@ -192,21 +169,7 @@ namespace Valve.VR.InteractionSystem
 
         protected virtual void HandAttachedUpdate(Hand hand)
         {
-            if (attachEaseIn)
-            {
-                float t = Util.RemapNumberClamped(Time.time, attachTime, attachTime + snapAttachEaseInTime, 0.0f, 1.0f);
-                if (t < 1.0f)
-                {
-                    t = snapAttachEaseInCurve.Evaluate(t);
-                    transform.position = Vector3.Lerp(attachPosition, attachEaseInTransform.position, t);
-                    transform.rotation = Quaternion.Lerp(attachRotation, attachEaseInTransform.rotation, t);
-                }
-                else if (!snapAttachEaseInCompleted)
-                {
-                    gameObject.SendMessage("OnThrowableAttachEaseInCompleted", hand, SendMessageOptions.DontRequireReceiver);
-                    snapAttachEaseInCompleted = true;
-                }
-            }
+
 
             bool grabbing_end = Player.instance.input_manager.GetGripUp(hand);
 

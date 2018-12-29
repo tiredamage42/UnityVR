@@ -29,7 +29,7 @@ namespace Valve.VR.InteractionSystem.Sample
 			textMesh.text = "No Hand Hovering";
 
             interactable = this.GetComponent<Interactable>();
-			interactable.attachmentFlags = Hand.defaultAttachmentFlags & ( ~Hand.AttachmentFlags.SnapOnAttach ) & (~Hand.AttachmentFlags.DetachOthers) & (~Hand.AttachmentFlags.VelocityMovement);
+			interactable.attachmentFlags = Hand.defaultAttachmentFlags & (~Hand.AttachmentFlags.DetachOthers) & (~Hand.AttachmentFlags.VelocityMovement);
 		}
 
 
@@ -73,8 +73,8 @@ namespace Valve.VR.InteractionSystem.Sample
                 hand.HoverLock(interactable);
 
                 // Attach this object to the hand
-                hand.AttachInteractable(interactable, GrabTypes.Grip);// startingGrabType);
-            }
+                hand.AttachInteractable(interactable);
+			}
             else if (isGrabEnding)
             {
                 // Detach this object from the hand

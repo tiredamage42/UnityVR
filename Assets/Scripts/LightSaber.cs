@@ -100,7 +100,6 @@ public class LightSaber : MonoBehaviour
         BuildLineRend("Inner Glow", options.o.inner_glow);
         BuildLineRend("Outer Glow", options.o.outer_glow);
         line_rends = GetComponentsInChildren<LineRenderer>();
-        Debug.Log("linerends" + line_rends.Length);
         line_rends[0].gameObject.SetActive(false);
         line_rends[1].gameObject.SetActive(false);
 
@@ -122,6 +121,7 @@ public class LightSaber : MonoBehaviour
     }
 
     void Awake () {
+        is_active = false;
         rb = GetComponent<Rigidbody>();
         interactable = GetComponent<Interactable>();			
 		
@@ -172,15 +172,12 @@ public class LightSaber : MonoBehaviour
 
             audio_shot.PlaySoundEffect(enabled ? options.o.blade_enable_audio : options.o.blade_disable_audio);
 
-
             if (enabled) {
                 loop_source.Play();
             }
             else {
                 loop_source.Stop();
             }
-
-
         }
     }
 
@@ -313,7 +310,7 @@ public class LightSaber : MonoBehaviour
             if (grabbing)
             
             {
-				hand.AttachInteractable( interactable, GrabTypes.None, null ); //startingGrabType, attachmentOffset );
+				hand.AttachInteractable( interactable ); //startingGrabType, attachmentOffset );
                 hand.HideGrabHint();
             }
 		}
@@ -331,6 +328,7 @@ public class LightSaber : MonoBehaviour
             
             rb.interpolation = RigidbodyInterpolation.None;
 		    
+            Debug.Log("TRIGGERING SABER");
             TriggerSaber(true);
         }
 

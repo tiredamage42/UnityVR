@@ -35,7 +35,7 @@ namespace Valve.VR.InteractionSystem
         public bool hideControllerOnAttach = false;
 
         [Tooltip("The integer in the animator to trigger on pickup. 0 for none")]
-        public int handAnimationOnPickup = 0;
+        //public int handAnimationOnPickup = 0;
         public RenderModel.AnimationState handAnimationOnPickup1 = RenderModel.AnimationState.Rest;
 
 
@@ -51,13 +51,13 @@ namespace Valve.VR.InteractionSystem
 		public event OnDetachedFromHandDelegate onDetachedFromHand;
 
 
-        [Tooltip("Specify whether you want to snap to the hand's object attachment point, or just the raw hand")]
-        public bool useHandObjectAttachmentPoint = true;
+        //[Tooltip("Specify whether you want to snap to the hand's object attachment point, or just the raw hand")]
+        //public bool useHandObjectAttachmentPoint = true;
 
-        [Tooltip("If you want the hand to stick to an object while attached, set the transform to stick to here")]
-        public Transform handFollowTransform;
-        public bool handFollowTransformPosition = true;
-        public bool handFollowTransformRotation = true;
+        //[Tooltip("If you want the hand to stick to an object while attached, set the transform to stick to here")]
+        //public Transform handFollowTransform;
+        //public bool handFollowTransformPosition = true;
+        //public bool handFollowTransformRotation = true;
 
 
         [Tooltip("Set whether or not you want this interactible to highlight when hovering over it")]

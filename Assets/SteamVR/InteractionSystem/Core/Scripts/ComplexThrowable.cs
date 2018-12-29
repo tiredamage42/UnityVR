@@ -139,7 +139,8 @@ namespace Valve.VR.InteractionSystem
 			offset = Mathf.Min( offset.magnitude, 1.0f ) * offset.normalized;
 			holdingPoint = holdingBody.transform.InverseTransformPoint( holdingBody.worldCenterOfMass + offset );
 
-			hand.AttachInteractable( interactable, startingGrabType );
+			//hand.AttachInteractable( interactable, startingGrabType );
+			hand.AttachInteractable( interactable );
 
 			// Update holding list
 			holdingHands.Add( hand );

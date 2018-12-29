@@ -52,7 +52,8 @@ namespace Valve.VR.InteractionSystem
 
         protected virtual void HandAttachedUpdate(Hand hand)
         {
-            Color grabbedColor;
+            Color grabbedColor = Color.blue;
+           /*
             switch (hand.currentAttachedObjectInfo.Value.grabbedWithType)
             {
                 case GrabTypes.Grip:
@@ -72,6 +73,7 @@ namespace Valve.VR.InteractionSystem
                     grabbedColor = Color.white;
                     break;
             }
+        */
 
             if ((onlyColorOnChange && grabbedColor != lastColor) || onlyColorOnChange == false)
                 ColorSelf(grabbedColor);

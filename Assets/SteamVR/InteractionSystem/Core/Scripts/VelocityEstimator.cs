@@ -59,6 +59,10 @@ namespace Valve.VR.InteractionSystem
 				}
 				velocity *= ( 1.0f / velocitySampleCount );
 			}
+			else {
+				Debug.LogError("ZERO VELOCITY");
+
+			}
 
 			return velocity;
 		}
@@ -77,6 +81,9 @@ namespace Valve.VR.InteractionSystem
 					angularVelocity += angularVelocitySamples[i];
 				}
 				angularVelocity *= ( 1.0f / angularVelocitySampleCount );
+			}
+			else {
+				Debug.LogError("ZERO Angular VELOCITY");
 			}
 
 			return angularVelocity;
