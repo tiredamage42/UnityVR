@@ -30,12 +30,12 @@ namespace Valve.VR.InteractionSystem
         [Flags]
         public enum AttachmentFlags
         {
-            DetachOthers = 1 << 1, // Other objects attached to this hand will be detached.
-            DetachFromOtherHand = 1 << 2, // This object will be detached from the other hand.
-            ParentToHand = 1 << 3, // The object will be parented to the hand.
-            VelocityMovement = 1 << 4, // The object will attempt to move to match the position and rotation of the hand.
-            TurnOnKinematic = 1 << 5, // The object will not respond to external physics.
-            TurnOffGravity = 1 << 6, // The object will not respond to external physics.
+            DetachOthers = 1 << 0, // Other objects attached to this hand will be detached.
+            DetachFromOtherHand = 1 << 1, // This object will be detached from the other hand.
+            ParentToHand = 1 << 2, // The object will be parented to the hand.
+            VelocityMovement = 1 << 3, // The object will attempt to move to match the position and rotation of the hand.
+            TurnOnKinematic = 1 << 4, // The object will not respond to external physics.
+            TurnOffGravity = 1 << 5, // The object will not respond to external physics.
         };
 
         public const AttachmentFlags defaultAttachmentFlags = AttachmentFlags.ParentToHand |
@@ -149,7 +149,9 @@ namespace Valve.VR.InteractionSystem
         {
 
             AttachmentFlags flags = interactable_to_attach.parameters.attachmentFlags;
-            AttachObj (interactable_to_attach.gameObject, interactable_to_attach, interactable_to_attach.parameters.attach_position_offset, interactable_to_attach.parameters.attach_rotation_offset, flags);
+            AttachObj (interactable_to_attach.gameObject, 
+                interactable_to_attach, interactable_to_attach.parameters.attach_position_offset,
+                interactable_to_attach.parameters.attach_rotation_offset, flags);
         
         }
         // Attach a GameObject to this GameObject
@@ -180,6 +182,7 @@ namespace Valve.VR.InteractionSystem
         }
 
         void SetPhysicsAttachedObject (ref AttachedObject ao, GameObject obj_attached) {
+            Debug.Log("hwjdshfsk");
             ao.attachedRigidbody = obj_attached.GetComponent<Rigidbody>();
             if (ao.attachedRigidbody == null)
                 return;
@@ -209,6 +212,7 @@ namespace Valve.VR.InteractionSystem
           
             if (ao.HasAttachFlag(AttachmentFlags.TurnOnKinematic))
             {
+                Debug.LogError("YOOOO");
                 ao.collisionDetectionMode = ao.attachedRigidbody.collisionDetectionMode;
                 if (ao.collisionDetectionMode == CollisionDetectionMode.Continuous)
                     ao.attachedRigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
@@ -226,8 +230,8 @@ namespace Valve.VR.InteractionSystem
 
         void MaybeSnap (ref AttachedObject ao, Transform t_attached, Vector3 pos_offset, Vector3 rot_offset) {
             SetOffset(pos_offset, rot_offset);
-            t_attached.rotation = transform.rotation;
-            t_attached.position = transform.position;
+            t_attached.rotation = hand_attachment_offset_helper.rotation;// transform.rotation;
+            t_attached.position = hand_attachment_offset_helper.position;// transform.position;
             
         }
 

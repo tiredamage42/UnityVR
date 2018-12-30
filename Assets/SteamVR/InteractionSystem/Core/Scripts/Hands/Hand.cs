@@ -212,7 +212,6 @@ namespace Valve.VR.InteractionSystem
 
             if (hoverLocked)
             {
-                Debug.Log("hover locked" + name);
                 return;
             }
 

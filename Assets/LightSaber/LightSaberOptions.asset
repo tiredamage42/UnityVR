@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: LightSaberOptions
   m_EditorClassIdentifier: 
   hard_swing_velocity_threshold: 5
-  min_swing_velocity: 1
-  blade_size: {x: 0.025, y: 0.9}
-  inner_blade_mult: 0.75
-  open_close_speed: {x: 0.1, y: 0.1}
+  min_swing_velocity: 2
+  blade_size: {x: 0.05, y: 0.9}
+  inner_blade_mult: 0.4
+  open_close_speed: {x: 15, y: 15}
   blade_epsilon_threshold: 0.01
   texture_offset_speed: 5
   blade_layer_mask:

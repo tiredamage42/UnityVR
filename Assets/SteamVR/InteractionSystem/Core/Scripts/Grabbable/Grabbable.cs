@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace Valve.VR.InteractionSystem
 {
-	[RequireComponent( typeof( Rigidbody ) )]
+	//[RequireComponent( typeof( Rigidbody ) )]
     [RequireComponent( typeof(VelocityEstimator))]
 	public class Grabbable : Interactable
 	{
@@ -39,7 +39,11 @@ namespace Valve.VR.InteractionSystem
 			velocityEstimator = GetComponent<VelocityEstimator>();
             
             rb = GetComponent<Rigidbody>();
+            if (rb)
+            {
+
             rb.maxAngularVelocity = 50.0f;
+            }
 
 		}
 

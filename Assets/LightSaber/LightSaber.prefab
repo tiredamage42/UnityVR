@@ -46,6 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8e09dc0c02049088df184802db28c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightOnHover: 1
+  hideHighlight: []
+  parameters: {fileID: 11400000, guid: c337f5b1a26254655bdf552ae1f9fae3, type: 2}
+  restoreOriginalParent: 0
   blade_color: {r: 1, g: 0, b: 0, a: 1}
   inner_blade_color: {r: 1, g: 1, b: 1, a: 1}
   trigger_bool: 0

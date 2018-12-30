@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Lightsaber
   m_EditorClassIdentifier: 
   attachmentFlags: 23
-  attach_position_offset: {x: 0, y: 0, z: 0}
-  attach_rotation_offset: {x: 0, y: 0, z: 0}
+  attach_position_offset: {x: -0.015, y: 0.025, z: 0}
+  attach_rotation_offset: {x: 75, y: 0, z: 0}
   hideHandOnAttach: 0
   hideSkeletonOnAttach: 0
   hideControllerOnAttach: 1

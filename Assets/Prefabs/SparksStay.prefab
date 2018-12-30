@@ -49,7 +49,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -4638,10 +4638,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6775991536029991737}
     m_Modifications:
-    - target: {fileID: 100000, guid: ab43bd2b6049dee46bf2bed2c739ec25, type: 3}
-      propertyPath: m_Name
-      value: sprite_realSmoke_b_example
-      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ab43bd2b6049dee46bf2bed2c739ec25, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4685,6 +4681,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: ab43bd2b6049dee46bf2bed2c739ec25, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ab43bd2b6049dee46bf2bed2c739ec25, type: 3}
+      propertyPath: m_Name
+      value: sprite_realSmoke_b_example
       objectReference: {fileID: 0}
     - target: {fileID: 19800000, guid: ab43bd2b6049dee46bf2bed2c739ec25, type: 3}
       propertyPath: prewarm
@@ -4749,6 +4749,10 @@ PrefabInstance:
     - target: {fileID: 19800000, guid: ab43bd2b6049dee46bf2bed2c739ec25, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.atime2
       value: 23516
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800000, guid: ab43bd2b6049dee46bf2bed2c739ec25, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19900000, guid: ab43bd2b6049dee46bf2bed2c739ec25, type: 3}
       propertyPath: m_CastShadows
