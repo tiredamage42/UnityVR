@@ -6,143 +6,122 @@ using System.Collections;
 
 namespace Valve.VR.InteractionSystem
 {
-	[RequireComponent( typeof( Interactable ) )]
 	[RequireComponent( typeof( Rigidbody ) )]
     [RequireComponent( typeof(VelocityEstimator))]
-	public class Throwable : MonoBehaviour
+	public class Grabbable : Interactable
 	{
-		//[EnumFlags]
-		//[Tooltip( "The flags used to attach this object to the hand." )]
-		//public Hand.AttachmentFlags attachmentFlags = Hand.AttachmentFlags.ParentToHand | Hand.AttachmentFlags.DetachFromOtherHand | Hand.AttachmentFlags.TurnOnKinematic;
+        [Header("Grabbable Options:")]
+        public GrabbableParameters parameters;
 
-		[Tooltip( "How fast must this object be moving to attach due to a trigger hold instead of a trigger press? (-1 to disable)" )]
-        public float catchingSpeedThreshold = -1;
+        
+    
+        [System.NonSerialized]
+        public Hand attachedToHand;
 
-        public ReleaseStyle releaseVelocityStyle = ReleaseStyle.GetFromHand;
 
-        [Tooltip("The time offset used when releasing the object with the RawFromHand option")]
-        public float releaseVelocityTimeOffset = -0.011f;
 
-        public float scaleReleaseVelocity = 1.1f;
-
+	
 		[Tooltip( "When detaching the object, should it return to its original parent?" )]
 		public bool restoreOriginalParent = false;
 
-        
 		protected VelocityEstimator velocityEstimator;
         protected bool attached = false;
-        protected float attachTime;
-        protected Vector3 attachPosition;
-        protected Quaternion attachRotation;
-
-		public UnityEvent onPickUp;
-		public UnityEvent onDetachFromHand;
-
+        
+		
         
         protected RigidbodyInterpolation hadInterpolation = RigidbodyInterpolation.None;
 
-        protected new Rigidbody rigidbody;
+        protected Rigidbody rb;
 
-        [HideInInspector]
-        public Interactable interactable;
-
-
-        //-------------------------------------------------
+      
         protected virtual void Awake()
 		{
 			velocityEstimator = GetComponent<VelocityEstimator>();
-            interactable = GetComponent<Interactable>();
-
-			
-            rigidbody = GetComponent<Rigidbody>();
-            rigidbody.maxAngularVelocity = 50.0f;
+            
+            rb = GetComponent<Rigidbody>();
+            rb.maxAngularVelocity = 50.0f;
 
 		}
 
 
         //-------------------------------------------------
-        protected virtual void OnHandHoverBegin( Hand hand )
+        protected override void OnHandHoverBegin( Hand hand )
 		{
-			bool showHint = false;
+            base.OnHandHoverBegin(hand);
+			bool showHint = true;
 
             // "Catch" the throwable by holding down the interaction button instead of pressing it.
             // Only do this if the throwable is moving faster than the prescribed threshold speed,
             // and if it isn't attached to another hand
-            if ( !attached && catchingSpeedThreshold != -1)
+            if ( !attached && parameters.catchingSpeedThreshold != -1)
             {
-                float catchingThreshold = catchingSpeedThreshold * SteamVR_Utils.GetLossyScale(Player.instance.transform);
+                float catchingThreshold = parameters.catchingSpeedThreshold * SteamVR_Utils.GetLossyScale(Player.instance.transform);
 
                 bool grabbing = Player.instance.input_manager.GetGrip(hand);
-
-                //GrabTypes bestGrabType = hand.GetBestGrabbingType();
-
-				
+		
                 if ( grabbing )
-                //if ( bestGrabType != GrabTypes.None )
 				{
-					if (rigidbody.velocity.magnitude >= catchingThreshold)
+					if (rb.velocity.magnitude >= catchingThreshold)
 					{
-						hand.AttachInteractable( interactable);//, GrabTypes.None ); //bestGrabType );
-						showHint = false;
+						hand.AttachGrabbable( this );
+                        showHint = false;
 					}
 				}
 			}
 
 			if ( showHint )
 			{
-                hand.ShowGrabHint();
+                Player.instance.input_manager.ShowGrabHint(hand);
 			}
 		}
 
 
-        //-------------------------------------------------
-        protected virtual void OnHandHoverEnd( Hand hand )
+        protected override void OnHandHoverEnd( Hand hand )
 		{
-            hand.HideGrabHint();
-		}
+            base.OnHandHoverEnd(hand);
+            Player.instance.input_manager.HideGrabHint(hand);
+
+        }
 
 
         //-------------------------------------------------
-        protected virtual void HandHoverUpdate( Hand hand )
+        protected override void HandHoverUpdate( Hand hand )
         {
+            base.HandHoverUpdate (hand);
+
             bool grabbing = Player.instance.input_manager.GetGripDown(hand);
             if (grabbing)
             {
-				hand.AttachInteractable( interactable );
-                hand.HideGrabHint();
+				hand.AttachGrabbable( this );
+                Player.instance.input_manager.HideGrabHint(hand);
+            
             }
 		}
 
         //-------------------------------------------------
         protected virtual void OnAttachedToHand( Hand hand )
 		{
-            //Debug.Log("Pickup: " + hand.GetGrabStarting().ToString());
-            hadInterpolation = this.rigidbody.interpolation;
+            //if ( onAttachedToHand != null )
+			//	onAttachedToHand.Invoke( hand );
+			
+            attachedToHand = hand;
+            hadInterpolation = rb.interpolation;
 
             attached = true;
 
-			onPickUp.Invoke();
+			//onPickUp.Invoke();
 
 			hand.HoverLock( null );
             
-            rigidbody.interpolation = RigidbodyInterpolation.None;
+            rb.interpolation = RigidbodyInterpolation.None;
 
 		    velocityEstimator.BeginEstimatingVelocity();
 			
-            attachTime = Time.time;
-			attachPosition = transform.position;
-			attachRotation = transform.rotation;
-			
-           
-		}
-
-
-        //-------------------------------------------------
-
+        }
 
         public virtual void GetReleaseVelocities(Hand hand, out Vector3 velocity, out Vector3 angularVelocity)
         {
-            switch (releaseVelocityStyle)
+            switch (parameters.releaseVelocityStyle)
             {
                 case ReleaseStyle.ShortEstimation:
                     velocityEstimator.FinishEstimatingVelocity();
@@ -153,30 +132,24 @@ namespace Valve.VR.InteractionSystem
                     hand.GetEstimatedPeakVelocities(out velocity, out angularVelocity);
                     break;
                 case ReleaseStyle.GetFromHand:
-                    velocity = hand.GetTrackedObjectVelocity(releaseVelocityTimeOffset);
-                    angularVelocity = hand.GetTrackedObjectAngularVelocity(releaseVelocityTimeOffset);
+                    velocity = hand.GetTrackedObjectVelocity(parameters.releaseVelocityTimeOffset);
+                    angularVelocity = hand.GetTrackedObjectAngularVelocity(parameters.releaseVelocityTimeOffset);
                     break;
                 default:
                 case ReleaseStyle.NoChange:
-                    velocity = rigidbody.velocity;
-                    angularVelocity = rigidbody.angularVelocity;
+                    velocity = rb.velocity;
+                    angularVelocity = rb.angularVelocity;
                     break;
             }
 
-            if (releaseVelocityStyle != ReleaseStyle.NoChange)
-                velocity *= scaleReleaseVelocity;
+            if (parameters.releaseVelocityStyle != ReleaseStyle.NoChange)
+                velocity *= parameters.scaleReleaseVelocity;
         }
 
         protected virtual void HandAttachedUpdate(Hand hand)
         {
-
-
             bool grabbing_end = Player.instance.input_manager.GetGripUp(hand);
-
-
-            //if (hand.IsGrabEnding(this.gameObject))
-            if (grabbing_end)
-            
+            if (grabbing_end)   
             {
                 hand.DetachObject(gameObject, restoreOriginalParent);
 
@@ -207,32 +180,49 @@ namespace Valve.VR.InteractionSystem
 			gameObject.SetActive( false );
 			velocityEstimator.FinishEstimatingVelocity();
 		}
+
         protected virtual void OnDetachedFromHand(Hand hand)
         {
-            attached = false;
-
-            onDetachFromHand.Invoke();
-
-            hand.HoverUnlock(null);
+            //if ( onDetachedFromHand != null )
+			//	onDetachedFromHand.Invoke( hand );	
             
-            rigidbody.interpolation = hadInterpolation;
+            attachedToHand = null;
+
+
+            attached = false;
+            //onDetachFromHand.Invoke();
+            hand.HoverUnlock(null);
+    
+            rb.interpolation = hadInterpolation;
 
             Vector3 velocity;
             Vector3 angularVelocity;
-
             GetReleaseVelocities(hand, out velocity, out angularVelocity);
 
-            rigidbody.velocity = velocity;
-            rigidbody.angularVelocity = angularVelocity;
+            rb.velocity = velocity;
+            rb.angularVelocity = angularVelocity;
         }
 
+
+
+
+protected override bool DisableHighlight () {
+            return attachedToHand == false;
+        }
+        
+
+
+        
+
+        protected override void OnDestroy() {
+            base.OnDestroy();
+            if (attachedToHand != null) {
+                attachedToHand.ForceHoverUnlock();
+                attachedToHand.DetachObject(this.gameObject, false);
+            }
+
+        }
 	}
 
-    public enum ReleaseStyle
-    {
-        NoChange,
-        GetFromHand,
-        ShortEstimation,
-        AdvancedEstimation,
-    }
+    public enum ReleaseStyle { NoChange, GetFromHand, ShortEstimation, AdvancedEstimation }
 }

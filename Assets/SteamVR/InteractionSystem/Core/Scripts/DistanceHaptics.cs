@@ -29,7 +29,8 @@ namespace Valve.VR.InteractionSystem
                 if (hand != null)
                 { 
 					float pulse = distanceIntensityCurve.Evaluate( distance );
-                    hand.TriggerHapticPulse((ushort)pulse);
+
+					Player.instance.input_manager.TriggerHapticPulse(hand, (ushort)pulse);
 
                     //SteamVR_Controller.Input( (int)trackedObject.index ).TriggerHapticPulse( (ushort)pulse );
 				}

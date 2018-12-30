@@ -17,7 +17,7 @@ namespace Valve.VR.InteractionSystem
         Right
     }
 
-    [RequireComponent(typeof(Throwable))]
+    [RequireComponent(typeof(Grabbable))]
 
     public class Equippable : MonoBehaviour
     {
@@ -28,15 +28,15 @@ namespace Valve.VR.InteractionSystem
         public WhichHand defaultHand = WhichHand.Right;
 
         private Vector3 initialScale;
-        private Interactable interactable;
+        private Grabbable grabbable;
 
         [HideInInspector]
         public SteamVR_Input_Sources attachedHandType
         {
             get
             {
-                if (interactable.attachedToHand)
-                    return interactable.attachedToHand.handType;
+                if (grabbable.attachedToHand)
+                    return grabbable.attachedToHand.handType;
                 else
                     return SteamVR_Input_Sources.Any;
             }
@@ -45,12 +45,12 @@ namespace Valve.VR.InteractionSystem
         private void Start()
         {
             initialScale = transform.localScale;
-            interactable = GetComponent<Interactable>();
+            grabbable = GetComponent<Grabbable>();
         }
         
         private void Update()
         {
-            if (interactable.attachedToHand)
+            if (grabbable.attachedToHand)
             {
                 Vector3 flipScale = initialScale;
                 if ((attachedHandType == SteamVR_Input_Sources.RightHand && defaultHand == WhichHand.Right) || (attachedHandType == SteamVR_Input_Sources.LeftHand && defaultHand == WhichHand.Left))

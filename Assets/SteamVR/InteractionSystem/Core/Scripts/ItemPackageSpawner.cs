@@ -171,12 +171,13 @@ namespace Valve.VR.InteractionSystem
 
 			if ( !requireTriggerPressToTake ) // we don't require trigger press for pickup. Spawn and attach object.
 			{
-				SpawnAndAttachObject( hand, GrabTypes.Scripted );
+				SpawnAndAttachObject( hand );
 			}
 
 			if ( requireTriggerPressToTake && showTriggerHint )
 			{
-                hand.ShowGrabHint("PickUp");
+				Player.instance.input_manager.ShowGrabHint(hand, "PickUp");
+
 			}
 		}
 
@@ -233,12 +234,14 @@ namespace Valve.VR.InteractionSystem
 
 			if ( requireTriggerPressToTake )
 			{
+				/*
                 GrabTypes startingGrab = GrabTypes.None;//hand.GetGrabStarting();
 
 				if (startingGrab != GrabTypes.None)
 				{
-					SpawnAndAttachObject( hand, startingGrab);
+					SpawnAndAttachObject( hand);
 				}
+				*/
 			}
 		}
 
@@ -248,7 +251,8 @@ namespace Valve.VR.InteractionSystem
 		{
 			if ( !justPickedUpItem && requireTriggerPressToTake && showTriggerHint )
 			{
-                hand.HideGrabHint();
+				                Player.instance.input_manager.HideGrabHint(hand);
+
 			}
 
 			justPickedUpItem = false;
@@ -293,7 +297,7 @@ namespace Valve.VR.InteractionSystem
 
 
 		//-------------------------------------------------
-		private void SpawnAndAttachObject( Hand hand, GrabTypes grabType )
+		private void SpawnAndAttachObject( Hand hand )
 		{
 			if ( hand.otherHand != null )
 			{
@@ -307,14 +311,15 @@ namespace Valve.VR.InteractionSystem
 
 			if ( showTriggerHint )
 			{
-                hand.HideGrabHint();
+				Player.instance.input_manager.HideGrabHint(hand);
+
 			}
 
 			if ( itemPackage.otherHandItemPrefab != null )
 			{
 				if ( hand.otherHand.hoverLocked )
 				{
-					//Debug.Log( "Not attaching objects because other hand is hoverlocked and we can't deliver both items." );
+					Debug.Log( "Not attaching objects because other hand is hoverlocked and we can't deliver both items." );
 					return;
 				}
 			}
@@ -338,14 +343,12 @@ namespace Valve.VR.InteractionSystem
 
 			spawnedItem = GameObject.Instantiate( itemPackage.itemPrefab );
 			spawnedItem.SetActive( true );
-			//hand.AttachGameObject( spawnedItem, grabType, attachmentFlags );
 			hand.AttachGameObject( spawnedItem, attachmentFlags );
 
 			if ( ( itemPackage.otherHandItemPrefab != null ) && ( hand.otherHand.isActive ) )
 			{
 				GameObject otherHandObjectToAttach = GameObject.Instantiate( itemPackage.otherHandItemPrefab );
 				otherHandObjectToAttach.SetActive( true );
-				//hand.otherHand.AttachGameObject( otherHandObjectToAttach, grabType, attachmentFlags );
 				hand.otherHand.AttachGameObject( otherHandObjectToAttach, attachmentFlags );
 			
 			}

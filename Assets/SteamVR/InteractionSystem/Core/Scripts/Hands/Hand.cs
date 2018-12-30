@@ -26,17 +26,7 @@ namespace Valve.VR.InteractionSystem
 
         public SteamVR_Behaviour_Pose trackedObject;
 
-        [SteamVR_DefaultAction("GrabPinch")]
-        public SteamVR_Action_Boolean grabPinchAction;
-
-        [SteamVR_DefaultAction("GrabGrip")]
-        public SteamVR_Action_Boolean grabGripAction;
-
-        [SteamVR_DefaultAction("Haptic")]
-        public SteamVR_Action_Vibration hapticAction;
-
-        [SteamVR_DefaultAction("InteractUI")]
-        public SteamVR_Action_Boolean uiInteractAction;
+        
 
         public bool useHoverSphere = true;
         public Transform hoverSphereTransform;
@@ -50,10 +40,6 @@ namespace Valve.VR.InteractionSystem
         public bool useFingerJointHover = true;
         public SteamVR_Skeleton_JointIndexEnum fingerJointHover = SteamVR_Skeleton_JointIndexEnum.indexTip;
         public float fingerJointHoverRadius = 0.025f;
-
-        //[Tooltip("A transform on the hand to center attached objects on")]
-        //public Transform objectAttachmentPoint;
-
         
         public GameObject renderModelPrefab;
         protected List<RenderModel> renderModels = new List<RenderModel>();
@@ -173,9 +159,6 @@ namespace Valve.VR.InteractionSystem
 
             if (hoverSphereTransform == null)
                 hoverSphereTransform = this.transform;
-
-            //if (objectAttachmentPoint == null)
-            //    objectAttachmentPoint = this.transform;
 
             applicationLostFocusObject = new GameObject("_application_lost_focus");
             applicationLostFocusObject.transform.parent = transform;
@@ -508,45 +491,9 @@ namespace Valve.VR.InteractionSystem
 
 
 
-        /*
-        Trigger the haptics at a certain time for a certain length
+      
 
-        secondsFromNow: How long from the current time to execute the action (in seconds - can be 0)
-        durationSeconds: How long the haptic action should last (in seconds)
-        frequency: How often the haptic motor should bounce (0 - 320 in hz. The lower end being more useful)
-        amplitude: How intense the haptic action should be (0 - 1)
-        inputSource: The device you would like to execute the haptic action. Any if the action is not device specific.
-
-        void SteamVR_Action_Vibration.Execute(
-            float secondsFromNow, 
-            float durationSeconds, 
-            float frequency, 
-            float amplitude, 
-            SteamVR_Input_Sources inputSource
-        )
-        */
-        public void TriggerHapticPulse(ushort microSecondsDuration)
-        {
-            float seconds = (float)microSecondsDuration / 1000000f;
-            hapticAction.Execute(0, seconds, 1f / seconds, 1, handType);
-        }
-        public void TriggerHapticPulse(float duration, float frequency, float amplitude)
-        {
-            hapticAction.Execute(0, duration, frequency, amplitude, handType);
-        }
-
-        public void ShowGrabHint()
-        {
-            ControllerButtonHints.ShowButtonHint(this, grabGripAction); //todo: assess
-        }
-        public void ShowGrabHint(string text)
-        {
-            ControllerButtonHints.ShowTextHint(this, grabGripAction, text);
-        }
-        public void HideGrabHint()
-        {
-            ControllerButtonHints.HideButtonHint(this, grabGripAction); //todo: assess
-        }
+      
 
         void InitController()
         {
@@ -574,7 +521,7 @@ namespace Valve.VR.InteractionSystem
             renderModelInstance.transform.localRotation = Quaternion.identity;
             renderModelInstance.transform.localScale = renderModelPrefab.transform.localScale;
 
-            TriggerHapticPulse(800);  //pulse on controller init
+            Player.instance.input_manager.TriggerHapticPulse(this, 800); //pulse on controller init
 
             int deviceIndex = trackedObject.GetDeviceIndex();
 

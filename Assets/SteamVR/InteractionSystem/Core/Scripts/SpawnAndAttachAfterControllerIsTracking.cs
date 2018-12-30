@@ -33,8 +33,9 @@ namespace Valve.VR.InteractionSystem
                 {
                     GameObject objectToAttach = GameObject.Instantiate(itemPrefab);
                     objectToAttach.SetActive(true);
-                    hand.AttachGameObject(objectToAttach);//, GrabTypes.Scripted);
-                    hand.TriggerHapticPulse(800);
+                    hand.AttachGameObject(objectToAttach);
+					Player.instance.input_manager.TriggerHapticPulse(hand, 800);
+							
                     Destroy(gameObject);
 
                     // If the player's scale has been changed the object to attach will be the wrong size.

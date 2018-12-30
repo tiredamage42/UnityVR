@@ -27,8 +27,8 @@ namespace Valve.VR.InteractionSystem
 
         private Color lastColor;
 
-        private Throwable throwable;
-        private bool isThrowable { get { return throwable != null; } }
+        private Grabbable grabbable;
+        private bool isGrabbable { get { return grabbable != null; } }
 
         private const bool onlyColorOnChange = true;
 
@@ -37,7 +37,7 @@ namespace Valve.VR.InteractionSystem
         private void Awake()
         {
             selfRenderers = this.GetComponentsInChildren<Renderer>();
-            throwable = this.GetComponent<Throwable>();
+            grabbable = this.GetComponent<Grabbable>();
             rigidbody = this.GetComponent<Rigidbody>();
             colliders = this.GetComponentsInChildren<Collider>();
         }
@@ -84,12 +84,12 @@ namespace Valve.VR.InteractionSystem
         
         private void OnDetachedFromHand( Hand hand )
 		{
-            if (isThrowable)
+            if (isGrabbable)
             {
                 Vector3 velocity;
                 Vector3 angularVelocity;
 
-                throwable.GetReleaseVelocities(hand, out velocity, out angularVelocity);
+                grabbable.GetReleaseVelocities(hand, out velocity, out angularVelocity);
 
                 CreateMarker(Color.cyan, velocity.normalized);
             }
@@ -155,7 +155,7 @@ namespace Valve.VR.InteractionSystem
             copy.name = string.Format("{0} [offset: {1:0.000}]", copy.name, timeOffset);
 
             Vector3 velocity = fromHand.GetTrackedObjectVelocity(timeOffset);
-            velocity *= throwable.scaleReleaseVelocity;
+            velocity *= grabbable.parameters.scaleReleaseVelocity;
 
             debugCopy.rigidbody.velocity = velocity;
 

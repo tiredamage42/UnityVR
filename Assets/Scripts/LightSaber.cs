@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
 
-
-
-[RequireComponent( typeof( Interactable ) )]
-public class LightSaber : MonoBehaviour
+public class LightSaber : Grabbable
 {
     public Color blade_color = Color.red;
     public Color inner_blade_color = Color.white;
@@ -18,7 +15,6 @@ public class LightSaber : MonoBehaviour
     ParticleSystem sparks_instance;
     DevOptions.OptionsHolder<LightSaberOptions> options = new DevOptions.OptionsHolder<LightSaberOptions>();
 
-    Rigidbody rb;
     float contact_timer;
     public List<Collider> contact_colliders = new List<Collider>();
     void OnTriggerEnter (Collider other) {
@@ -120,11 +116,11 @@ public class LightSaber : MonoBehaviour
 
     }
 
-    void Awake () {
+    protected override void Awake () {
+        base.Awake();
         is_active = false;
         rb = GetComponent<Rigidbody>();
-        interactable = GetComponent<Interactable>();			
-		
+      	
 
         BuildAudioSources();
         BuildLineRenderers ();
@@ -220,8 +216,9 @@ public class LightSaber : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         if (trigger_bool) {
             TriggerSaber(!is_active);
             trigger_bool = false;
@@ -274,71 +271,20 @@ public class LightSaber : MonoBehaviour
 
 
 
-        protected bool attached = false;
-        
-        protected RigidbodyInterpolation hadInterpolation = RigidbodyInterpolation.None;
 
-        [HideInInspector] public Interactable interactable;
-
-
-        
-        protected virtual void OnHandHoverBegin( Hand hand )
-		{
-			bool showHint = true;
-			if ( showHint )
-			{
-                hand.ShowGrabHint();
-			}
-		}
-
-
-        //-------------------------------------------------
-        protected virtual void OnHandHoverEnd( Hand hand )
-		{
-            hand.HideGrabHint();
-		}
-
-
-        //-------------------------------------------------
-        protected virtual void HandHoverUpdate( Hand hand )
-        {
-            bool grabbing = Player.instance.input_manager.GetGripDown(hand);
-
-            //GrabTypes startingGrabType = hand.GetGrabStarting();
-            
-            //if (startingGrabType != GrabTypes.None)
-            if (grabbing)
-            
-            {
-				hand.AttachInteractable( interactable ); //startingGrabType, attachmentOffset );
-                hand.HideGrabHint();
-            }
-		}
-
-        //-------------------------------------------------
-        protected virtual void OnAttachedToHand( Hand hand )
-		{
-            //Debug.Log("Pickup: " + hand.GetGrabStarting().ToString());
-            hadInterpolation = rb.interpolation;
-
-            attached = true;
-
-
-			hand.HoverLock( null );
-            
-            rb.interpolation = RigidbodyInterpolation.None;
-		    
+        protected override void OnAttachedToHand(Hand hand) {
+            base.OnAttachedToHand(hand);
             Debug.Log("TRIGGERING SABER");
             TriggerSaber(true);
         }
 
-
        
 
        
 
-        protected virtual void HandAttachedUpdate(Hand hand)
+        protected override void HandAttachedUpdate(Hand hand)
         {
+            base.HandAttachedUpdate(hand);
             Vector3 velocity = hand.GetTrackedObjectVelocity();
             Vector3 angularVelocity = hand.GetTrackedObjectAngularVelocity();
 
@@ -346,42 +292,11 @@ public class LightSaber : MonoBehaviour
 
             CheckVelocityForSwing(Mathf.Max(velocity.magnitude, angularVelocity.magnitude));
     
-
-            bool grabbing_end = Player.instance.input_manager.GetGripUp(hand);
-
-
-            //if (hand.IsGrabEnding(this.gameObject))
-            if (grabbing_end)
-            
-            {
-                hand.DetachObject(gameObject, false);
-            }
         }
 
-        protected virtual void OnHandFocusAcquired( Hand hand )
-		{
-		}
-        protected virtual void OnHandFocusLost( Hand hand )
-		{
-		}
-        protected virtual void OnDetachedFromHand(Hand hand)
+        protected override void OnDetachedFromHand(Hand hand)
         {
-            attached = false;
-
-            
-        
-            hand.HoverUnlock(null);
-            
-            rb.interpolation = hadInterpolation;
-
-            Vector3 velocity = hand.GetTrackedObjectVelocity();
-            Vector3 angularVelocity = hand.GetTrackedObjectAngularVelocity();
-                    
-
-          
-            rb.velocity = velocity;
-            rb.angularVelocity = angularVelocity;
-
+            base.OnDetachedFromHand(hand);
             TriggerSaber(false);
         }
 

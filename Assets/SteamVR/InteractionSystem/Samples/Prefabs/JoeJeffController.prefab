@@ -92,9 +92,7 @@ GameObject:
   - component: {fileID: 65000013450482282}
   - component: {fileID: 114000012924251668}
   - component: {fileID: 114000013789606070}
-  - component: {fileID: 114000011677327570}
   - component: {fileID: 114000012529584996}
-  - component: {fileID: 114000010685951938}
   m_Layer: 0
   m_Name: JoeJeffController
   m_TagString: Untagged
@@ -109,14 +107,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000012738080298}
-  m_LocalRotation: {x: -0.26395345, y: -0.000000029802322, z: -0.000001296401, w: 0.9645355}
+  m_LocalRotation: {x: -0.26395714, y: 0, z: 0, w: 0.96453446}
   m_LocalPosition: {x: 0.107, y: 1.075, z: -0.022}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4000013232486850}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -30.594002, y: 90.00001, z: 0}
+  m_LocalEulerAnglesHint: {x: -30.61, y: 0, z: 0}
 --- !u!33 &33000011309403894
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -203,6 +201,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c178cd2631c07944bc48d4c9d824edb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightOnHover: 1
+  hideHighlight: []
+  parameters: {fileID: 0}
+  attachmentFlags: 46
+  attach_position_offset: {x: 0, y: 0, z: 0}
+  attach_rotation_offset: {x: 0, y: 0, z: 0}
+  hideHandOnAttach: 1
+  hideSkeletonOnAttach: 0
+  hideControllerOnAttach: 0
+  handAnimationOnPickup1: 0
+  setRangeOfMotionOnPickup: -1
+  catchingSpeedThreshold: -1
+  releaseVelocityStyle: 1
+  releaseVelocityTimeOffset: -0.011
+  scaleReleaseVelocity: 1.1
+  restoreOriginalParent: 0
   Joystick: {fileID: 4000013232486850}
   joyMove: 0.015
   actionSet: {fileID: 11400000, guid: c0907a6a601554f7e8f3519c223fe74b, type: 2}
@@ -224,63 +238,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snapTo: {fileID: 0}
   snapTime: 2
---- !u!114 &114000011677327570
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000012738080298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffefbea063cab884ca33e5a449e5c22c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attachmentFlags: 84
-  attachmentOffset: {fileID: 4000010793482278}
-  catchingSpeedThreshold: -1
-  releaseVelocityStyle: 3
-  releaseVelocityTimeOffset: -0.011
-  scaleReleaseVelocity: 1.1
-  restoreOriginalParent: 0
-  attachEaseIn: 0
-  snapAttachEaseInCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  snapAttachEaseInTime: 0.15
-  onPickUp:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  onDetachFromHand:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  snapAttachEaseInCompleted: 0
-  interactable: {fileID: 0}
 --- !u!114 &114000012529584996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,27 +253,3 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
---- !u!114 &114000010685951938
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000012738080298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  activateActionSetOnAttach: {fileID: 0}
-  hideHandOnAttach: 1
-  hideSkeletonOnAttach: 0
-  hideControllerOnAttach: 1
-  handAnimationOnPickup: 0
-  setRangeOfMotionOnPickup: 0
-  useHandObjectAttachmentPoint: 0
-  handFollowTransform: {fileID: 0}
-  handFollowTransformPosition: 1
-  handFollowTransformRotation: 1
-  highlightOnHover: 1
-  hideHighlight: []

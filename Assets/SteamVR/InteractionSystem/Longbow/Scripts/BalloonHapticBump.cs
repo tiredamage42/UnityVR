@@ -23,7 +23,8 @@ namespace Valve.VR.InteractionSystem
 				Hand hand = physParent.GetComponentInParent<Hand>();
 				if ( hand != null )
 				{
-					hand.TriggerHapticPulse( 500 );
+					Player.instance.input_manager.TriggerHapticPulse(hand, 500);
+							
 				}
 			}
 		}

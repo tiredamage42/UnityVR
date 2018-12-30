@@ -35,7 +35,8 @@ namespace Valve.VR.InteractionSystem
 		{
 			currentHand = hand;
 			InputModule.instance.HoverBegin( gameObject );
-			ControllerButtonHints.ShowButtonHint( hand, hand.uiInteractAction);
+			Player.instance.input_manager.ShowInteractUIHint(hand);
+							
 		}
 
 
@@ -43,7 +44,8 @@ namespace Valve.VR.InteractionSystem
 		private void OnHandHoverEnd( Hand hand )
 		{
 			InputModule.instance.HoverEnd( gameObject );
-			ControllerButtonHints.HideButtonHint( hand, hand.uiInteractAction);
+			Player.instance.input_manager.HideInteractUIHint(hand);
+
 			currentHand = null;
 		}
 
@@ -51,10 +53,11 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private void HandHoverUpdate( Hand hand )
 		{
-			if ( hand.uiInteractAction != null && hand.uiInteractAction.GetStateDown(hand.handType) )
+			if (Player.instance.input_manager.GetUIInteractionDown(hand) )
 			{
 				InputModule.instance.Submit( gameObject );
-				ControllerButtonHints.HideButtonHint( hand, hand.uiInteractAction);
+				Player.instance.input_manager.HideInteractUIHint(hand);
+
 			}
 		}
 

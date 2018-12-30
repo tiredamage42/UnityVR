@@ -5,7 +5,7 @@ using Valve.VR.InteractionSystem;
 
 namespace Valve.VR.InteractionSystem.Sample
 {
-    public class JoeJeffController : MonoBehaviour
+    public class JoeJeffController : Grabbable
     {
         public Transform Joystick;
         public float joyMove = 0.1f;
@@ -30,19 +30,45 @@ namespace Valve.VR.InteractionSystem.Sample
         private bool jump;
         private float glow;
         private SteamVR_Input_Sources hand;
-        private Interactable interactable;
-
-        private void Start()
+        bool was_attached;
+        
+        protected override void Update()
         {
-            interactable = GetComponent<Interactable>();
-            interactable.activateActionSetOnAttach = actionSet;
-        }
+            base.Update();
 
-        private void Update()
-        {
-            if (interactable.attachedToHand)
+              if (attachedToHand)
             {
-                hand = interactable.attachedToHand.handType;
+
+                if (!was_attached) {
+                    
+
+
+                    actionSet.ActivatePrimary();
+
+
+                }
+
+
+            }
+            else {
+                if (was_attached) {
+                    
+
+
+                    
+                    actionSet.Deactivate();
+
+                }
+
+
+
+            }
+            was_attached = attachedToHand != null;
+
+
+            if (attachedToHand)
+            {
+                hand = attachedToHand.handType;
                 Vector2 m = a_move.GetAxis(hand);
                 movement = new Vector3(m.x, 0, m.y);
 

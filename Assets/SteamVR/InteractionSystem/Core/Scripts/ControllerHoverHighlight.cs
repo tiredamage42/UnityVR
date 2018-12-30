@@ -106,7 +106,8 @@ namespace Valve.VR.InteractionSystem
 
             if (fireHapticsOnHightlight)
             {
-                hand.TriggerHapticPulse(500);
+                Player.instance.input_manager.TriggerHapticPulse(hand, 500);
+							
             }
 
             renderModel.Show();
@@ -123,7 +124,8 @@ namespace Valve.VR.InteractionSystem
 
             if (fireHapticsOnHightlight)
             {
-                hand.TriggerHapticPulse(300);
+                Player.instance.input_manager.TriggerHapticPulse(hand, 300);
+							
             }
 
             renderModel.Hide();

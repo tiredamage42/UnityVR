@@ -163,8 +163,8 @@ namespace Valve.VR.InteractionSystem
 			if ( hand != null )
 			{
 				ushort collisionStrength = (ushort)Mathf.Clamp( Util.RemapNumber( collision.relativeVelocity.magnitude, 0f, 3f, 500f, 800f ), 500f, 800f );
-
-				hand.TriggerHapticPulse( collisionStrength );
+Player.instance.input_manager.TriggerHapticPulse(hand, collisionStrength);
+							
 			}
 		}
 

@@ -75,7 +75,8 @@ namespace Valve.VR.InteractionSystem
 			//if ( hand && (hand.isActive) && ( hand.GetBestGrabbingType() != GrabTypes.None ) )
 			{
 				ushort duration = (ushort)Random.Range( minimumPulseDuration, maximumPulseDuration + 1 );
-				hand.TriggerHapticPulse( duration );
+				Player.instance.input_manager.TriggerHapticPulse(hand, duration);
+
 
 				onPulse.Invoke();
 			}

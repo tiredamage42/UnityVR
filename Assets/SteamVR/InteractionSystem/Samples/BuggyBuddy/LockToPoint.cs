@@ -12,19 +12,19 @@ namespace Valve.VR.InteractionSystem.Sample
         public float snapTime = 2;
 
         private float dropTimer;
-        private Interactable interactable;
+        private Grabbable grabbable;
         
         private void Start()
         {
-            interactable = GetComponent<Interactable>();
+            grabbable = GetComponent<Grabbable>();
             body = GetComponent<Rigidbody>();
         }
         
         private void FixedUpdate()
         {
             bool used = false;
-            if (interactable != null)
-                used = interactable.attachedToHand;
+            if (grabbable != null)
+                used = grabbable.attachedToHand;
 
             if (used)
             {

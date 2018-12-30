@@ -16,7 +16,7 @@ namespace Valve.VR.InteractionSystem
 		public Material seeThruMaterial;
 
 		private GameObject seeThru;
-		private Interactable interactable;
+		private Grabbable grabbable;
 		private Renderer sourceRenderer;
 		private Renderer destRenderer;
 
@@ -24,7 +24,7 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		void Awake()
 		{
-			interactable = GetComponentInParent<Interactable>();
+			grabbable = GetComponentInParent<Grabbable>();
 
 			//
 			// Create child game object for see thru renderer
@@ -107,16 +107,16 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		void OnEnable()
 		{
-			interactable.onAttachedToHand += AttachedToHand;
-			interactable.onDetachedFromHand += DetachedFromHand;
+			//grabbable.onAttachedToHand += AttachedToHand;
+			//grabbable.onDetachedFromHand += DetachedFromHand;
 		}
 
 
 		//-------------------------------------------------
 		void OnDisable()
 		{
-			interactable.onAttachedToHand -= AttachedToHand;
-			interactable.onDetachedFromHand -= DetachedFromHand;
+			//grabbable.onAttachedToHand -= AttachedToHand;
+			//grabbable.onDetachedFromHand -= DetachedFromHand;
 		}
 
 

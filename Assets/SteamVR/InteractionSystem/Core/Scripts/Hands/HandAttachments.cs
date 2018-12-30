@@ -18,9 +18,7 @@ namespace Valve.VR.InteractionSystem
         void InitializeHandHelper () {
             hand_attachment_offset_helper = new GameObject("HandHelper").transform;
             hand_attachment_offset_helper.SetParent(transform);
-           
         }
-
         void SetOffset (Vector3 pos_offset, Vector3 rot_offset) {
             hand_attachment_offset_helper.localPosition = pos_offset;
             hand_attachment_offset_helper.localRotation = Quaternion.Euler(rot_offset);
@@ -38,7 +36,6 @@ namespace Valve.VR.InteractionSystem
             VelocityMovement = 1 << 4, // The object will attempt to move to match the position and rotation of the hand.
             TurnOnKinematic = 1 << 5, // The object will not respond to external physics.
             TurnOffGravity = 1 << 6, // The object will not respond to external physics.
-            AllowSidegrade = 1 << 7, // The object is able to switch from a pinch grab to a grip grab. Decreases likelyhood of a good throw but also decreases likelyhood of accidental drop
         };
 
         public const AttachmentFlags defaultAttachmentFlags = AttachmentFlags.ParentToHand |
@@ -49,19 +46,14 @@ namespace Valve.VR.InteractionSystem
         [System.Serializable] public struct AttachedObject
         {
             public GameObject attachedObject;
-            public Interactable interactable;
+            public Grabbable grabbable;
             public Rigidbody attachedRigidbody;
             public CollisionDetectionMode collisionDetectionMode;
             public bool attachedRigidbodyWasKinematic;
             public bool attachedRigidbodyUsedGravity;
             public GameObject originalParent;
             public bool isParentedToHand;
-            //public GrabTypes grabbedWithType;
             public AttachmentFlags attachmentFlags;
-            //public Vector3 initialPositionalOffset;
-            //public Quaternion initialRotationalOffset;
-            //public Transform attachedOffsetTransform;
-            //public Transform handAttachmentPointTransform;
 
             public bool HasAttachFlag(AttachmentFlags flag)
             {
@@ -105,8 +97,7 @@ namespace Valve.VR.InteractionSystem
 
 
 
-        //void AttachObj (GameObject obj_attached, Interactable interactable_ref, Vector3 pos_offset, Vector3 rot_offset, GrabTypes grabbedWithType, AttachmentFlags flags, Transform attachmentOffset = null)
-        void AttachObj (GameObject obj_attached, Interactable interactable_ref, Vector3 pos_offset, Vector3 rot_offset, AttachmentFlags flags)
+        void AttachObj (GameObject obj_attached, Grabbable grabbable, Vector3 pos_offset, Vector3 rot_offset, AttachmentFlags flags)
         
         {
         
@@ -114,7 +105,6 @@ namespace Valve.VR.InteractionSystem
                 flags = defaultAttachmentFlags;
             AttachedObject attachedObject = new AttachedObject();
             attachedObject.attachmentFlags = flags;
-            //attachedObject.attachedOffsetTransform = attachmentOffset;
             //Make sure top object on stack is non-null
             CleanUpAttachedObjectStack();
 
@@ -138,13 +128,10 @@ namespace Valve.VR.InteractionSystem
                 currentAttachedObject.SendMessage("OnHandFocusLost", this, SendMessageOptions.DontRequireReceiver);
             
             attachedObject.attachedObject = obj_attached;
-            //attachedObject.handAttachmentPointTransform = this.transform;
             
-            SetInteractaleAttachedObject (ref attachedObject, interactable_ref);
+            SetInteractaleAttachedObject (ref attachedObject, grabbable);
             attachedObject.originalParent = obj_attached.transform.parent != null ? obj_attached.transform.parent.gameObject : null;
-            //attachedObject.grabbedWithType = grabbedWithType;
             MaybeParentToHand (ref attachedObject, obj_attached);
-            //MaybeSnap (ref attachedObject, obj_attached.transform, attachmentOffset, pos_offset, rot_offset);
             MaybeSnap (ref attachedObject, obj_attached.transform, pos_offset, rot_offset);
             
             SetPhysicsAttachedObject (ref attachedObject, obj_attached);
@@ -158,12 +145,11 @@ namespace Valve.VR.InteractionSystem
         // Attach a GameObject to this GameObject
         // objectToAttach - The GameObject to attach
         // attachmentPoint - Name of the GameObject in the hierarchy of this Hand which should act as the attachment point for this GameObject
-        public void AttachInteractable(Interactable interactable_to_attach)//, GrabTypes grabbedWithType, Transform attachmentOffset = null)
+        public void AttachGrabbable(Grabbable interactable_to_attach)//, GrabTypes grabbedWithType, Transform attachmentOffset = null)
         {
 
-            AttachmentFlags flags = interactable_to_attach.attachmentFlags;
-            //AttachObj (interactable_to_attach.gameObject, interactable_to_attach, interactable_to_attach.attach_position_offset, interactable_to_attach.attach_rotation_offset, grabbedWithType, flags, attachmentOffset);
-            AttachObj (interactable_to_attach.gameObject, interactable_to_attach, interactable_to_attach.attach_position_offset, interactable_to_attach.attach_rotation_offset, flags);
+            AttachmentFlags flags = interactable_to_attach.parameters.attachmentFlags;
+            AttachObj (interactable_to_attach.gameObject, interactable_to_attach, interactable_to_attach.parameters.attach_position_offset, interactable_to_attach.parameters.attach_rotation_offset, flags);
         
         }
         // Attach a GameObject to this GameObject
@@ -171,31 +157,25 @@ namespace Valve.VR.InteractionSystem
         // flags - The flags to use for attaching the object
         // attachmentPoint - Name of the GameObject in the hierarchy of this Hand which should act as the attachment point for this GameObject
         public void AttachGameObject(GameObject objectToAttach, AttachmentFlags flags = defaultAttachmentFlags)
-        //public void AttachGameObject(GameObject objectToAttach, GrabTypes grabbedWithType, AttachmentFlags flags = defaultAttachmentFlags, Transform attachmentOffset = null)
-        
         {
             AttachObj (objectToAttach, null, Vector3.zero, Vector3.zero, flags);
-        
-        //    AttachObj (objectToAttach, null, Vector3.zero, Vector3.zero, grabbedWithType, flags, attachmentOffset);
         }
-        void SetInteractaleAttachedObject (ref AttachedObject ao, Interactable interactable) {
-            ao.interactable = interactable;
+        void SetInteractaleAttachedObject (ref AttachedObject ao, Grabbable grabbable) {
+            ao.grabbable = grabbable;
             
-            if (interactable == null)
+            if (grabbable == null)
                 return;
 
-            //if (interactable.useHandObjectAttachmentPoint)
-            //    ao.handAttachmentPointTransform = objectAttachmentPoint;
-            if (interactable.hideHandOnAttach)
+            if (grabbable.parameters.hideHandOnAttach)
                 SetVisibility(false);
-            if (interactable.hideSkeletonOnAttach && mainRenderModel != null && mainRenderModel.displayHandByDefault)
+            if (grabbable.parameters.hideSkeletonOnAttach && mainRenderModel != null && mainRenderModel.displayHandByDefault)
                 SetSkeletonVisibility (false);
-            if (interactable.hideControllerOnAttach && mainRenderModel != null && mainRenderModel.displayControllerByDefault)
+            if (grabbable.parameters.hideControllerOnAttach && mainRenderModel != null && mainRenderModel.displayControllerByDefault)
                 SetControllerVisibility(false); 
-            if (interactable.handAnimationOnPickup1 != RenderModel.AnimationState.Rest)
-                SetAnimationState(interactable.handAnimationOnPickup1);
-            if (interactable.setRangeOfMotionOnPickup != SkeletalMotionRangeChange.None)
-                SetTemporarySkeletonRangeOfMotion(interactable.setRangeOfMotionOnPickup);
+            if (grabbable.parameters.handAnimationOnPickup1 != RenderModel.AnimationState.Rest)
+                SetAnimationState(grabbable.parameters.handAnimationOnPickup1);
+            if (grabbable.parameters.setRangeOfMotionOnPickup != SkeletalMotionRangeChange.None)
+                SetTemporarySkeletonRangeOfMotion(grabbable.parameters.setRangeOfMotionOnPickup);
             
         }
 
@@ -205,15 +185,15 @@ namespace Valve.VR.InteractionSystem
                 return;
             
             
-            Interactable interactable = ao.interactable;
-            if (interactable != null && interactable.attachedToHand != null) //already attached to another hand
+            Grabbable grabbable = ao.grabbable;
+            if (grabbable != null && grabbable.attachedToHand != null) //already attached to another hand
             {
                 //if it was attached to another hand, get the flags from that hand
                 
-                for (int i = 0; i < interactable.attachedToHand.attachedObjects.Count; i++)
+                for (int i = 0; i < grabbable.attachedToHand.attachedObjects.Count; i++)
                 {
-                    AttachedObject attachedObjectInList = interactable.attachedToHand.attachedObjects[i];
-                    if (attachedObjectInList.interactable == interactable)
+                    AttachedObject attachedObjectInList = grabbable.attachedToHand.attachedObjects[i];
+                    if (attachedObjectInList.grabbable == grabbable)
                     {
                         ao.attachedRigidbodyWasKinematic = attachedObjectInList.attachedRigidbodyWasKinematic;
                         ao.attachedRigidbodyUsedGravity = attachedObjectInList.attachedRigidbodyUsedGravity;
@@ -244,7 +224,6 @@ namespace Valve.VR.InteractionSystem
                 obj_attached.transform.parent = this.transform;
         }
 
-        //void MaybeSnap (ref AttachedObject ao, Transform t_attached, Transform attachmentOffset, Vector3 pos_offset, Vector3 rot_offset) {
         void MaybeSnap (ref AttachedObject ao, Transform t_attached, Vector3 pos_offset, Vector3 rot_offset) {
             SetOffset(pos_offset, rot_offset);
             t_attached.rotation = transform.rotation;
@@ -269,18 +248,18 @@ namespace Valve.VR.InteractionSystem
                 AttachedObject a_obj = attachedObjects[index];
 
 
-                Interactable interactable = a_obj.interactable;
-                if (interactable != null)
+                Grabbable grabbable = a_obj.grabbable;
+                if (grabbable != null)
                 {
-                    if (interactable.hideHandOnAttach)
+                    if (grabbable.parameters.hideHandOnAttach)
                         SetVisibility(true);
-                    if (interactable.hideSkeletonOnAttach && mainRenderModel != null && mainRenderModel.displayHandByDefault)
+                    if (grabbable.parameters.hideSkeletonOnAttach && mainRenderModel != null && mainRenderModel.displayHandByDefault)
                         SetSkeletonVisibility (true);
-                    if (interactable.hideControllerOnAttach && mainRenderModel != null && mainRenderModel.displayControllerByDefault)
+                    if (grabbable.parameters.hideControllerOnAttach && mainRenderModel != null && mainRenderModel.displayControllerByDefault)
                         SetControllerVisibility(true); 
-                    if (interactable.handAnimationOnPickup1 != RenderModel.AnimationState.Rest)
+                    if (grabbable.parameters.handAnimationOnPickup1 != RenderModel.AnimationState.Rest)
                         StopAnimation();
-                    if (interactable.setRangeOfMotionOnPickup != SkeletalMotionRangeChange.None)
+                    if (grabbable.parameters.setRangeOfMotionOnPickup != SkeletalMotionRangeChange.None)
                         ResetTemporarySkeletonRangeOfMotion();
                 }
 
@@ -309,7 +288,7 @@ namespace Valve.VR.InteractionSystem
                         a_obj.attachedRigidbody.useGravity = a_obj.attachedRigidbodyUsedGravity;
                 }
 
-                if (interactable == null || (interactable != null && interactable.isDestroying == false))
+                if (grabbable == null || (grabbable != null && grabbable.isDestroying == false))
                 {
                     a_obj.attachedObject.SetActive(true);
                     a_obj.attachedObject.SendMessage("OnDetachedFromHand", this, SendMessageOptions.DontRequireReceiver);
@@ -374,52 +353,6 @@ void AttachmentsUpdate()
 
 }
 
-/*
-protected virtual void AttachmentsOnTransformUpdate()
-        {
-
-            GameObject attachedObject = currentAttachedObject;
-            if (attachedObject != null)
-            {
-                Transform attach_trans = transform;// attachedObject.Value.handAttachmentPointTransform;
-                if (currentAttachedObjectInfo.Value.interactable != null && currentAttachedObjectInfo.Value.interactable.handFollowTransform != null)
-                {
-                    if (currentAttachedObjectInfo.Value.interactable.handFollowTransformRotation)
-                    {
-
-                        Debug.LogError("Setting Rotation OnTransform Update");
-
-                        Quaternion offset = Quaternion.Inverse(this.transform.rotation) * attach_trans.rotation;
-                        Quaternion targetHandRotation = currentAttachedObjectInfo.Value.interactable.handFollowTransform.rotation * Quaternion.Inverse(offset);
-
-
-                        if (mainRenderModel != null)
-                            mainRenderModel.SetHandRotation(targetHandRotation);
-                        if (hoverhighlightRenderModel != null)
-                            hoverhighlightRenderModel.SetHandRotation(targetHandRotation);
-                    }
-
-                    if (currentAttachedObjectInfo.Value.interactable.handFollowTransformPosition)
-                    {
-                        Debug.LogError("Setting Position OnTransform Update");
-
-                        Vector3 worldOffset = (this.transform.position - attach_trans.position);
-
-                        Quaternion rotationDiff = mainRenderModel.GetHandRotation() * Quaternion.Inverse(this.transform.rotation);
-
-                        Vector3 localOffset = rotationDiff * worldOffset;
-                        Vector3 targetHandPosition = currentAttachedObjectInfo.Value.interactable.handFollowTransform.position + localOffset;
-
-                        if (mainRenderModel != null)
-                            mainRenderModel.SetHandPosition(targetHandPosition);
-                        if (hoverhighlightRenderModel != null)
-                            hoverhighlightRenderModel.SetHandPosition(targetHandPosition);
-                    }
-                }
-            }
-        }
-        */
-
 
         protected const float MaxVelocityChange = 10f;
         protected const float VelocityMagic = 6000f;
@@ -428,8 +361,8 @@ protected virtual void AttachmentsOnTransformUpdate()
 
         protected void UpdateAttachedVelocity(AttachedObject attachedObjectInfo)
         {
-            Transform attach_trans = transform;// currentAttachedObjectInfo.Value.handAttachmentPointTransform;
-
+            Transform attach_trans = transform;
+            
             float scale = SteamVR_Utils.GetLossyScale(attach_trans);
 
             float maxVelocityChange = MaxVelocityChange * scale;
@@ -437,7 +370,6 @@ protected virtual void AttachmentsOnTransformUpdate()
             float angularVelocityMagic = AngularVelocityMagic;
             float maxAngularVelocityChange = MaxAngularVelocityChange * scale;
 
-            //Vector3 targetItemPosition = attach_trans.TransformPoint(attachedObjectInfo.initialPositionalOffset);
             Vector3 targetItemPosition = attach_trans.TransformPoint(hand_attachment_offset_helper.localPosition);
             
             Vector3 positionDelta = (targetItemPosition - attachedObjectInfo.attachedRigidbody.position);
@@ -449,7 +381,6 @@ protected virtual void AttachmentsOnTransformUpdate()
             }
 
 
-            //Quaternion targetItemRotation = attach_trans.rotation * attachedObjectInfo.initialRotationalOffset;
             Quaternion targetItemRotation = attach_trans.rotation * hand_attachment_offset_helper.localRotation;
             
             Quaternion rotationDelta = targetItemRotation * Quaternion.Inverse(attachedObjectInfo.attachedObject.transform.rotation);

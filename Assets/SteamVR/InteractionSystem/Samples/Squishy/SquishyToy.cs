@@ -6,9 +6,8 @@ using Valve.VR.InteractionSystem;
 
 namespace Valve.VR.InteractionSystem
 {
-    public class SquishyToy : MonoBehaviour
+    public class SquishyToy : Grabbable
     {
-        public Interactable interactable;
         public new SkinnedMeshRenderer renderer;
 
         public bool affectMaterial = true;
@@ -20,29 +19,25 @@ namespace Valve.VR.InteractionSystem
         public SteamVR_Action_Single pinchSqueeze;
 
 
-        private new Rigidbody rigidbody;
-
-        private void Start()
+       
+        protected override void Start()
         {
-            if (rigidbody == null)
-                rigidbody = GetComponent<Rigidbody>();
-
-            if (interactable == null)
-                interactable = GetComponent<Interactable>();
-
+            base.Start();
+       
             if (renderer == null)
                 renderer = GetComponent<SkinnedMeshRenderer>();
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
             float grip = 0;
             float pinch = 0;
 
-            if (interactable.attachedToHand)
+            if (attachedToHand)
             {
-                grip = gripSqueeze.GetAxis(interactable.attachedToHand.handType);
-                pinch = pinchSqueeze.GetAxis(interactable.attachedToHand.handType);
+                grip = gripSqueeze.GetAxis(attachedToHand.handType);
+                pinch = pinchSqueeze.GetAxis(attachedToHand.handType);
             }
 
             renderer.SetBlendShapeWeight(0, Mathf.Lerp(renderer.GetBlendShapeWeight(0), grip * 150, Time.deltaTime * 10));

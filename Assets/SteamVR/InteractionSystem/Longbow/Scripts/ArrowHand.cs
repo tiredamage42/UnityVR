@@ -142,7 +142,8 @@ namespace Valve.VR.InteractionSystem
 					if ( !arrowLerpComplete )
 					{
 						arrowLerpComplete = true;
-						hand.TriggerHapticPulse( 500 );
+						Player.instance.input_manager.TriggerHapticPulse(hand, 500);
+							
 					}
 				}
 				else
@@ -272,16 +273,18 @@ namespace Valve.VR.InteractionSystem
 		{
 			yield return new WaitForSeconds( 0.05f );
 
-			hand.otherHand.TriggerHapticPulse( 1500 );
+			Player.instance.input_manager.TriggerHapticPulse(hand, 1500);
+							
 			yield return new WaitForSeconds( 0.05f );
 
-			hand.otherHand.TriggerHapticPulse( 800 );
+Player.instance.input_manager.TriggerHapticPulse(hand, 800);
+							
 			yield return new WaitForSeconds( 0.05f );
-
-			hand.otherHand.TriggerHapticPulse( 500 );
+Player.instance.input_manager.TriggerHapticPulse(hand, 500);
+							
 			yield return new WaitForSeconds( 0.05f );
-
-			hand.otherHand.TriggerHapticPulse( 300 );
+Player.instance.input_manager.TriggerHapticPulse(hand, 300);
+							
 		}
 
 

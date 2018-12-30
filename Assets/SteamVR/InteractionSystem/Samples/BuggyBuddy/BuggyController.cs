@@ -7,7 +7,7 @@ using Valve.VR.InteractionSystem;
 
 namespace Valve.VR.InteractionSystem.Sample
 {
-    public class BuggyController : MonoBehaviour
+    public class BuggyController : Grabbable
     {
         public Transform modelJoystick;
         public float joystickRot = 20;
@@ -50,8 +50,7 @@ namespace Valve.VR.InteractionSystem.Sample
 
         private float usteer;
 
-        private Interactable interactable;
-
+        
         private Quaternion trigSRot;
 
         private Quaternion joySRot;
@@ -60,21 +59,23 @@ namespace Valve.VR.InteractionSystem.Sample
 
         private Vector3 initialScale;
 
-        private void Start()
+        bool was_attached;
+        protected override void Start()
         {
+            base.Start();
+
             joySRot = modelJoystick.localRotation;
             trigSRot = modelTrigger.localRotation;
 
-            interactable = GetComponent<Interactable>();
-            interactable.activateActionSetOnAttach = actionSet;
 
             StartCoroutine(DoBuzz());
             buggy.controllerReference = transform;
             initialScale = buggy.transform.localScale;
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
             Vector2 steer = Vector2.zero;
             float throttle = 0;
             float brake = 0;
@@ -85,18 +86,42 @@ namespace Valve.VR.InteractionSystem.Sample
             bool b_reset = false;
 
 
-            if (interactable.attachedToHand)
+            if (attachedToHand)
             {
-                SteamVR_Input_Sources hand = interactable.attachedToHand.handType;
+                SteamVR_Input_Sources hand = attachedToHand.handType;
+
+                if (!was_attached) {
+                    
+
+
+                    actionSet.ActivatePrimary();
+
+
+                }
+
 
                 steer = a_steering.GetAxis(hand);
-
                 throttle = a_trigger.GetAxis(hand);
                 b_brake = a_brake.GetState(hand);
                 b_reset = a_reset.GetState(hand);
                 brake = b_brake ? 1 : 0;
                 reset = a_reset.GetStateDown(hand);
             }
+            else {
+                if (was_attached) {
+                    
+
+
+                    
+                    actionSet.Deactivate();
+
+                }
+
+
+
+            }
+            was_attached = attachedToHand != null;
+
 
             if (reset && resettingRoutine == null)
             {
@@ -105,7 +130,7 @@ namespace Valve.VR.InteractionSystem.Sample
 
             if (ui_Canvas != null)
             {
-                ui_Canvas.gameObject.SetActive(interactable.attachedToHand);
+                ui_Canvas.gameObject.SetActive(attachedToHand);
 
                 usteer = Mathf.Lerp(usteer, steer.x, Time.deltaTime * 9);
                 ui_steer.localEulerAngles = Vector3.forward * usteer * -ui_steerangle;
@@ -114,6 +139,7 @@ namespace Valve.VR.InteractionSystem.Sample
                 ui_speed.fillAmount = Mathf.Lerp(ui_fillAngles.x, ui_fillAngles.y, 1 - (Mathf.Exp(-buggy.speed / speedLim)));
 
             }
+            
 
             modelJoystick.localRotation = joySRot;
             /*if (input.AttachedHand != null && input.AttachedHand.IsLeft)
@@ -173,9 +199,10 @@ namespace Valve.VR.InteractionSystem.Sample
                 }
 
                 buzztimer = 0;
-                if (interactable.attachedToHand)
+                if (attachedToHand)
                 {
-                    interactable.attachedToHand.TriggerHapticPulse((ushort)Mathf.RoundToInt(300 * Mathf.Lerp(1.0f, 0.6f, buggy.mvol)));
+                    Player.instance.input_manager.TriggerHapticPulse(attachedToHand, (ushort)Mathf.RoundToInt(300 * Mathf.Lerp(1.0f, 0.6f, buggy.mvol)));
+
                 }
             }
         }

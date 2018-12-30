@@ -3,23 +3,18 @@ using System.Collections;
 
 namespace Valve.VR.InteractionSystem
 {
-    public class Grenade : MonoBehaviour
+    public class Grenade : Grabbable
     {
         public GameObject explodePartPrefab;
         public int explodeCount = 10;
 
         public float minMagnitudeToExplode = 1f;
 
-        private Interactable interactable;
-
-        private void Start()
-        {
-            interactable = this.GetComponent<Interactable>();
-        }
-
+        
+        
         private void OnCollisionEnter(Collision collision)
         {
-            if (interactable != null && interactable.attachedToHand != null) //don't explode in hand
+            if (attachedToHand != null) //don't explode in hand
                 return;
 
             if (collision.impulse.magnitude > minMagnitudeToExplode)

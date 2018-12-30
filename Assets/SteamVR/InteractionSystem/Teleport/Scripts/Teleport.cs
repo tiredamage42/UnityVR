@@ -52,7 +52,6 @@ namespace Valve.VR.InteractionSystem
 		private float pointerHideStartTime = 0.0f;
 		private bool meshFading = false;
 		private float fullTintAlpha;
-
 		private float invalidReticleMinScale = 0.2f;
 		private float invalidReticleMaxScale = 1.0f;
 		private float invalidReticleMinScaleDistance = 0.4f;
@@ -405,9 +404,12 @@ namespace Valve.VR.InteractionSystem
 		{
 			if ( player.rightHand != null ) {
 				if ( validLocation )
-					player.rightHand.TriggerHapticPulse( 800 );
+					Player.instance.input_manager.TriggerHapticPulse(player.rightHand, 800);
+
 				else
-					player.rightHand.TriggerHapticPulse( 100 );
+					Player.instance.input_manager.TriggerHapticPulse(player.rightHand, 100);
+
+					
 			}
 		}
 
@@ -514,7 +516,9 @@ namespace Valve.VR.InteractionSystem
 						//Haptic pulse for a few seconds
 						pulsed = true;
 
-						player.rightHand.TriggerHapticPulse( 500 );
+						
+						Player.instance.input_manager.TriggerHapticPulse(player.rightHand, 500);
+
 					}
 				}
 				else if ( !showHint && isShowingHint )

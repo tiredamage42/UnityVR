@@ -46,7 +46,7 @@ namespace Valve.VR.InteractionSystem{
 				return direction;
 			}
 		}
-		bool initialized_refs = false;
+//		bool initialized_refs = false;
 		void InitializeReferences (){
 			//if (initialized_refs)
 			//	return;
@@ -57,7 +57,7 @@ namespace Valve.VR.InteractionSystem{
 			}
 			hmdTransform = GetComponentInChildren<Camera>().transform;
 			headCollider = hmdTransform.GetComponentInChildren<Collider>();
-			initialized_refs = true;
+			//initialized_refs = true;
 		}
 
 		void Awake() {

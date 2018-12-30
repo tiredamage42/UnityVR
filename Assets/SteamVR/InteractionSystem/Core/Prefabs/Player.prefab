@@ -76,8 +76,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input_manager:
-    grabPinchAction: {fileID: 11400000, guid: 4a928ec5225fb43ec8e9c360160237b9, type: 2}
-    grabGripAction: {fileID: 11400000, guid: 44867223b3b4e4cd9979a112206942b1, type: 2}
+    grabPinchAction: {fileID: 11400000, guid: 44867223b3b4e4cd9979a112206942b1, type: 2}
+    grabGripAction: {fileID: 11400000, guid: 4a928ec5225fb43ec8e9c360160237b9, type: 2}
+    hapticAction: {fileID: 11400000, guid: 5f9aa98a3d916494084db1a00f1f259c, type: 2}
+    uiInteractAction: {fileID: 11400000, guid: 6ef56f6bacd574fa0bc258be9f0ce73d, type: 2}
   headCollider: {fileID: 13533284}
   hmdTransform: {fileID: 429506}
   rightHand: {fileID: 11401046}
@@ -459,10 +461,6 @@ MonoBehaviour:
   otherHand: {fileID: 11401046}
   handType: 1
   trackedObject: {fileID: 0}
-  grabPinchAction: {fileID: 11400000, guid: 4a928ec5225fb43ec8e9c360160237b9, type: 2}
-  grabGripAction: {fileID: 11400000, guid: 44867223b3b4e4cd9979a112206942b1, type: 2}
-  hapticAction: {fileID: 11400000, guid: 5f9aa98a3d916494084db1a00f1f259c, type: 2}
-  uiInteractAction: {fileID: 11400000, guid: 6ef56f6bacd574fa0bc258be9f0ce73d, type: 2}
   useHoverSphere: 1
   hoverSphereTransform: {fileID: 4000012325712216}
   hoverSphereRadius: 0.075
@@ -474,12 +472,14 @@ MonoBehaviour:
   useFingerJointHover: 1
   fingerJointHover: 10
   fingerJointHoverRadius: 0.05
-  objectAttachmentPoint: {fileID: 4000011474053580}
   renderModelPrefab: {fileID: 1000011547835092, guid: d5082f7d9f947374197e0a97786f4e40,
     type: 3}
   showDebugText: 0
   spewDebugText: 0
   showDebugInteractables: 0
+  overlappingColliders: []
+  _hoveringInteractable: {fileID: 0}
+  attachedObjects: []
 --- !u!114 &114000011273627542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -566,10 +566,6 @@ MonoBehaviour:
   otherHand: {fileID: 11450312}
   handType: 2
   trackedObject: {fileID: 0}
-  grabPinchAction: {fileID: 11400000, guid: 4a928ec5225fb43ec8e9c360160237b9, type: 2}
-  grabGripAction: {fileID: 11400000, guid: 44867223b3b4e4cd9979a112206942b1, type: 2}
-  hapticAction: {fileID: 11400000, guid: 5f9aa98a3d916494084db1a00f1f259c, type: 2}
-  uiInteractAction: {fileID: 11400000, guid: 6ef56f6bacd574fa0bc258be9f0ce73d, type: 2}
   useHoverSphere: 1
   hoverSphereTransform: {fileID: 480432}
   hoverSphereRadius: 0.075
@@ -581,12 +577,14 @@ MonoBehaviour:
   useFingerJointHover: 1
   fingerJointHover: 10
   fingerJointHoverRadius: 0.05
-  objectAttachmentPoint: {fileID: 490018}
   renderModelPrefab: {fileID: 1000012617731570, guid: 837f93beb9a614743ae3a2c0ada7c388,
     type: 3}
-  showDebugText: 0
-  spewDebugText: 0
-  showDebugInteractables: 0
+  showDebugText: 1
+  spewDebugText: 1
+  showDebugInteractables: 1
+  overlappingColliders: []
+  _hoveringInteractable: {fileID: 0}
+  attachedObjects: []
 --- !u!114 &114000011957598740
 MonoBehaviour:
   m_ObjectHideFlags: 0

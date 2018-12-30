@@ -4,7 +4,7 @@ using Valve.VR.InteractionSystem;
 
 namespace Valve.VR.InteractionSystem.Sample
 {
-    public class JoeJeff : MonoBehaviour
+    public class JoeJeff : Grabbable
     {
         public float animationSpeed;
 
@@ -40,35 +40,34 @@ namespace Valve.VR.InteractionSystem.Sample
 
         private bool held;
 
-        private new Rigidbody rigidbody;
-        private Interactable interactable;
-
+        
         public FireSource fire;
 
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             animator = GetComponent<Animator>();
-            rigidbody = GetComponent<Rigidbody>();
-            interactable = GetComponent<Interactable>();
             animator.speed = animationSpeed;
         }
 
-        private void Update()
+        protected override void Update()
         {
-            held = interactable.attachedToHand != null;
+            base.Update();
+
+            held = attachedToHand != null;
 
             jumpTimer -= Time.deltaTime;
 
             CheckGrounded();
 
-            rigidbody.freezeRotation = !held;
+            rb.freezeRotation = !held;
 
             if (held == false)
                 FixRotation();
         }
 
-        private void FixRotation()
+        void FixRotation()
         {
             Vector3 eulers = transform.eulerAngles;
             eulers.x = 0;
@@ -95,18 +94,18 @@ namespace Valve.VR.InteractionSystem.Sample
                     {
                         float moveFac = Mathf.InverseLerp(0, frictionTime, groundedTime);
                         //print(moveFac);
-                        Vector3 lerpV = Vector3.Lerp(rigidbody.velocity, animationDelta, moveFac * Time.deltaTime * 30);
+                        Vector3 lerpV = Vector3.Lerp(rb.velocity, animationDelta, moveFac * Time.deltaTime * 30);
                         animationDelta.x = lerpV.x;
                         animationDelta.z = lerpV.z;
                     }
 
                     // adding a little downward force to keep him on the floor
                     animationDelta.y += -0.2f;// rb.velocity.y;
-                    rigidbody.velocity = animationDelta;
+                    rb.velocity = animationDelta;
                 }
                 else
                 {
-                    rigidbody.velocity += input * Time.deltaTime * airControl;
+                    rb.velocity += input * Time.deltaTime * airControl;
                 }
             }
         }
@@ -146,8 +145,8 @@ namespace Valve.VR.InteractionSystem.Sample
 
             if (!isGrounded)
             {
-                animator.SetFloat("FallSpeed", Mathf.Abs(rigidbody.velocity.y));
-                animator.SetFloat("Jump", rigidbody.velocity.y);
+                animator.SetFloat("FallSpeed", Mathf.Abs(rb.velocity.y));
+                animator.SetFloat("Jump", rb.velocity.y);
             }
         }
 
@@ -182,7 +181,7 @@ namespace Valve.VR.InteractionSystem.Sample
             {
                 Debug.DrawLine(transform.position, footHit.point);
 
-                rigidbody.position = new Vector3(rigidbody.position.x, footHit.point.y, rigidbody.position.z);
+                rb.position = new Vector3(rb.position.x, footHit.point.y, rb.position.z);
             }
         }
 
@@ -203,10 +202,10 @@ namespace Valve.VR.InteractionSystem.Sample
             isGrounded = false;
             jumpTimer = 0.1f;
             animator.applyRootMotion = false;
-            rigidbody.position += Vector3.up * 0.03f;
-            Vector3 velocity = rigidbody.velocity;
+            rb.position += Vector3.up * 0.03f;
+            Vector3 velocity = rb.velocity;
             velocity.y = jumpVelocity;
-            rigidbody.velocity = velocity;
+            rb.velocity = velocity;
         }
     }
 }

@@ -10,9 +10,7 @@ using System.Collections.Generic;
 
 namespace Valve.VR.InteractionSystem
 {
-	//-------------------------------------------------------------------------
-	[RequireComponent( typeof( Interactable ) )]
-	public class ComplexThrowable : MonoBehaviour
+	public class ComplexGrabbable : Interactable
 	{
 		public enum AttachMode
 		{
@@ -34,18 +32,16 @@ namespace Valve.VR.InteractionSystem
 
 		private List<Rigidbody> rigidBodies = new List<Rigidbody>();
 
-		Interactable interactable;
-		//-------------------------------------------------
 		void Awake()
 		{
 			GetComponentsInChildren<Rigidbody>( rigidBodies );
-			interactable = GetComponent<Interactable>();
 		}
 
 
-		//-------------------------------------------------
-		void Update()
+		protected override void Update()
 		{
+			base.Update();
+
 			for ( int i = 0; i < holdingHands.Count; i++ )
 			{
 				if (Player.instance.input_manager.GetGripUp(holdingHands[i]))
@@ -58,47 +54,51 @@ namespace Valve.VR.InteractionSystem
 
 
 		//-------------------------------------------------
-		private void OnHandHoverBegin( Hand hand )
+		protected override void OnHandHoverBegin( Hand hand )
 		{
+			base.OnHandHoverBegin(hand);
+
 			if ( holdingHands.IndexOf( hand ) == -1 )
 			{
 				if ( hand.isActive )
 				{
-					hand.TriggerHapticPulse( 800 );
+					Player.instance.input_manager.TriggerHapticPulse(hand, 800);
+							
 				}
 			}
 		}
 
 
 		//-------------------------------------------------
-		private void OnHandHoverEnd( Hand hand )
+		protected override void OnHandHoverEnd( Hand hand )
 		{
+			base.OnHandHoverEnd(hand);
 			if ( holdingHands.IndexOf( hand ) == -1 )
 			{
 				if (hand.isActive)
 				{
-					hand.TriggerHapticPulse( 500 );
+					Player.instance.input_manager.TriggerHapticPulse(hand, 500);
+							
 				}
 			}
 		}
 
 
 		//-------------------------------------------------
-		private void HandHoverUpdate( Hand hand )
+		protected override void HandHoverUpdate( Hand hand )
 		{
+			base.HandHoverUpdate(hand);
 			bool starting_grab = Player.instance.input_manager.GetGripDown(hand);
 
-            //GrabTypes startingGrabType = hand.GetGrabStarting();
-            //if (startingGrabType != GrabTypes.None)
-			if (starting_grab)
+            if (starting_grab)
 			{
-				PhysicsAttach( hand, GrabTypes.None);//startingGrabType );
+				PhysicsAttach( hand);
 			}
 		}
 
 
 		//-------------------------------------------------
-		private void PhysicsAttach( Hand hand, GrabTypes startingGrabType )
+		private void PhysicsAttach( Hand hand )
 		{
 			PhysicsDetach( hand );
 
@@ -139,8 +139,7 @@ namespace Valve.VR.InteractionSystem
 			offset = Mathf.Min( offset.magnitude, 1.0f ) * offset.normalized;
 			holdingPoint = holdingBody.transform.InverseTransformPoint( holdingBody.worldCenterOfMass + offset );
 
-			//hand.AttachInteractable( interactable, startingGrabType );
-			hand.AttachInteractable( interactable );
+			//hand.AttachInteractable( this );
 
 			// Update holding list
 			holdingHands.Add( hand );

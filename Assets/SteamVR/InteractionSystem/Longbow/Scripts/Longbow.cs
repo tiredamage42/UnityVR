@@ -142,8 +142,10 @@ namespace Valve.VR.InteractionSystem
 					if ( ( nockDistanceTravelled > ( lastTickDistance + hapticDistanceThreshold ) ) || nockDistanceTravelled < ( lastTickDistance - hapticDistanceThreshold ) )
 					{
 						ushort hapticStrength = (ushort)Util.RemapNumber( nockDistanceTravelled, 0, maxPull, bowPullPulseStrengthLow, bowPullPulseStrengthHigh );
-						hand.TriggerHapticPulse( hapticStrength );
-						hand.otherHand.TriggerHapticPulse( hapticStrength );
+						
+						Player.instance.input_manager.TriggerHapticPulse(hand, hapticStrength);
+						Player.instance.input_manager.TriggerHapticPulse(hand.otherHand, hapticStrength);
+						
 
 						drawSound.PlayBowTensionClicks( drawTension );
 
@@ -154,8 +156,9 @@ namespace Valve.VR.InteractionSystem
 					{
 						if ( Time.time > nextStrainTick )
 						{
-							hand.TriggerHapticPulse( 400 );
-							hand.otherHand.TriggerHapticPulse( 400 );
+							Player.instance.input_manager.TriggerHapticPulse(hand, 400);
+							Player.instance.input_manager.TriggerHapticPulse(hand.otherHand, 400);
+						
 
 							drawSound.PlayBowTensionClicks( drawTension );
 
